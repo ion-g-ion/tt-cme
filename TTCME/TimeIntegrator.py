@@ -39,7 +39,7 @@ class TTInt():
             
         return S,P,ev,basis
         
-    def solve(self, initial_tt, T, intervals = None, return_all = False,nswp = 40,qtt = False,verb = False,rounding = True, device = None):
+    def solve(self, initial_tt, T, intervals = None, return_all = False,nswp = 40,qtt = False,verb = False,rounding = True, device = 'cpu'):
         
         dev = self.__A_tt.cores[0].device
        

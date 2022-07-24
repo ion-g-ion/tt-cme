@@ -85,24 +85,3 @@ class ParameterDependentGenerator(unittest.TestCase):
         self.assertLess((Att2[:,:,1,1,1,1,:,:,1,1,1,1] - Att).norm()/Att.norm(), 1e-13, "TT construction error: parameter dependence.")
 
 
-
-r1 = TTCME.ChemicalReaction(['mRNA','protein'],'mRNA->mRNA+protein', 0.015)
-r2 = TTCME.ChemicalReaction(['mRNA','protein'],'mRNA->', 0.002)
-r3 = TTCME.ChemicalReaction(['mRNA','protein'],'->mRNA', 0.1)
-r4 = TTCME.ChemicalReaction(['mRNA','protein'],'protein->', 0.01)
-
-mdl_single = TTCME.ReactionSystem(['mRNA','protein'],[r1, r2, r3, r4])
-
-r1m = TTCME.ChemicalReaction(['mRNA','protein'],'mRNA->mRNA+protein', 'c1', params = ['c1'])
-r2m = TTCME.ChemicalReaction(['mRNA','protein'],'mRNA->', 'c2', params = ['c2'])
-r3m = TTCME.ChemicalReaction(['mRNA','protein'],'->mRNA', 'c3', params = ['c3'])
-r4m = TTCME.ChemicalReaction(['mRNA','protein'],'protein->', 'c4', params = ['c4'])
-
-mdl_multi = TTCME.ReactionSystem(['mRNA','protein'],[r1m, r2m, r3m, r4m], params= ['c1','c2','c3','c4'])
-
-N = [80,120] 
-
-Att = mdl_single.generatorTT(N)
-
-basis_params = [TTCME.basis.BSplineBasis(32, [0.005,0.025], 2), TTCME.basis.BSplineBasis(32, [0.001,0.004], 2), TTCME.basis.BSplineBasis(32, [0.05,0.2], 2), TTCME.basis.BSplineBasis(32, [0.005,0.02], 2)]
-Att3 = mdl_multi.generatorTT(N,basis_params=basis_params)

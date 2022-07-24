@@ -67,6 +67,12 @@ class ChemicalReaction:
     
     @property
     def propensity(self):
+        """
+        Return the propensities
+
+        Returns:
+            list[callable]: the propensities.
+        """
         return self.__propensities
 
     @property
@@ -346,6 +352,17 @@ class ReactionSystem:
         return Gen
 
     def ssa(self,x0,time,Ns = 1):
+        """
+        Run the `SSA` algorithm to obtain a sample of size Ns.        
+
+        Args:
+            x0 (numpy.array): the initial state (length d). 
+            time (numpy.array): the time grid for observing the states.
+            Ns (int, optional): sample size. Defaults to 1.
+
+        Returns:
+            numpy.array: the states Ns x d.
+        """
 
         if x0.ndim==1 :
             x0 = np.tile(x0.reshape([-1,1]),Ns).transpose()
@@ -360,7 +377,17 @@ class ReactionSystem:
         Sample = GillespieMultiple(x0.astype(np.int64),Ns,time.astype(np.float64), np.array(Pre).astype(np.int64), np.array(nu).astype(np.int64), np.array(C).astype(np.float64))
         return Sample
     
-    def ssa_single(self, x0, time_grid):
+    def ssa_single(self, x0, time_max):
+        """
+        Compute a single trajectory using the `SSA` algorithm.
+
+        Args:
+            x0 (list[int]): the initial state.
+            time_max (float): the maximum time for the simulation.
+
+        Returns:
+            (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+        """
         Pre = []
         nu = []
         C = []
@@ -368,9 +395,20 @@ class ReactionSystem:
             Pre.append(r.pre)
             nu.append(r.post-r.pre)
             C.append(r.const)
-        return Gillespie(np.array(x0),time_grid[-1],np.array(Pre),np.array(nu),np.array(C))
+        return Gillespie(np.array(x0),time_max, np.array(Pre),np.array(nu),np.array(C))
     
     def jump_process_to_states(self, time_grid, reaction_time, reaction_jumps):
+        """
+        Discretize the output of `TTCME.ssa_single()` on the given time grid.
+
+        Args:
+            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+            reaction_time (numpy.array): the reaction times.
+            reaction_jumps (numpy.array): the reaction jumps.
+
+        Returns:
+            _type_: _description_
+        """
         states = Observations_grid(time_grid, reaction_time, reaction_jumps)
         return states
 

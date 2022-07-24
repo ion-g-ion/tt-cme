@@ -5,7 +5,18 @@ from .basis import BSplineBasis, LagrangeBasis, LegendreBasis, ChebyBasis, Dirac
 import copy
 
 def GammaPDF(alphas, betas, basis, variable_names = []):
+    """
+    Compute the PDF for multivariate distribution of independent gammas. 
 
+    Args:
+        alphas (_type_): _description_
+        betas (_type_): _description_
+        basis (_type_): _description_
+        variable_names (list[str], optional): the variable names. Defaults to [].
+
+    Returns:
+        pdfTT: the PDF instance.
+    """
     pdf = pdfTT(basis, variable_names = variable_names)
     # print(basis.interpolate(lambda x : x**(alpha-1) * np.exp(-beta*x)))
     tts = []
@@ -65,20 +76,57 @@ class LogNormalObservation:
 
         return tens
 
+    @staticmethod
+    def add_noise(sample, sigmas):
+        lst = [ np.random.lognormal(np.log(sample[:,i]+1),sigmas[i]).reshape([-1,1]) for i in range(len(sigmas)) ]
+        
+        sample = np.hstack(tuple(lst))
+        
+        return sample
+
 class GaussianObservation:
 
     def __init__(self, N, sigmas):
+        """
+        
+
+        Args:
+            N (list[int]): the state truncation.
+            sigmas (list[float]): the variances of the independent Gaussians.
+        """
         self.__N = N
         self.__sigmas = sigmas
         
     def likelihood(self, observation):
+        """
+        Computes the likelihood given an observation
 
+        Args:
+            observation (numpy.array): observation.
+
+        Returns:
+            torchtt.TT: the likelihood.
+        """
         noise_model = lambda x,y,s :  np.exp(-(y-x)**2/(2*s**2))
 
         tens = tntt.rank1TT([tn.tensor(noise_model(np.arange(self.__N[i]),observation[i],self.__sigmas[i])) for i in range(len(self.__N))])
 
         return tens
 
+    @staticmethod
+    def add_noise(sample, sigmas ):
+        """
+        Adds noise to the given sample.
+
+        Args:
+            sample (np.array): m x d array containing the number of eact species at disrete time steps. d is the number of species and m is the number of observations.
+            sigmas (list[float]): the sigmas of the normal random number generator.
+
+        Returns:
+            np.array: the resulting sample with noise.
+        """
+        sample += np.random.normal(scale = sigmas, size=sample.shape)
+        return sample
 
 class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
@@ -103,6 +151,11 @@ class pdfTT():
 
     @property
     def basis(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         return self.__basis.copy()
 
     @property
@@ -143,6 +196,12 @@ class pdfTT():
         return p
 
     def __repr__(self):
+        """
+        Offer a srtring representation of the instance.        
+
+        Returns:
+            str: the representation.
+        """
         s = "Probability density function:\n"
         s+= "p(" + ",".join(self.__variable_names) 
         if self.__dc == 0 :
@@ -154,8 +213,6 @@ class pdfTT():
 
         return s
 
-    def update(self,tensor):
-        self.tt = tensor
         
     def normalize(self):
         """
@@ -174,6 +231,12 @@ class pdfTT():
 
     @property
     def Z(self):
+        """
+        Computes the normalization constant. No normalization is performed.
+
+        Returns:
+            _type_: the normalization constant. In case of conditioned RVs, a `torchtt.TT` instance is returned.
+        """
         int_tt = tntt.rank1TT([tn.tensor(b.int) for b in self.__basis ])
 
         if self.__dc>0:
@@ -187,7 +250,11 @@ class pdfTT():
 
 
     def expected_value(self):
+        """_summary_
 
+        Returns:
+            _type_: _description_
+        """
         E = []
         for i in range(self.__d):
             pts, ws = self.__basis[i].integration_points(2)
@@ -277,7 +344,16 @@ class pdfTT():
                 
 
     def __pow__(self,other):
-        
+        """
+        Joint of 2 independent PDFs:
+        p(x1,...,xn,y1,...,ym) = p(x1,...,xn) * p(y1,...,ym)
+
+        Args:
+            other (pdfTT): the second pdf
+
+        Returns:
+            pdfTT: the resulting pdf
+        """
         basis_new = self.basis + other.basis
         variable_names = self.variable_names + other.variable_names
 
@@ -286,80 +362,3 @@ class pdfTT():
 
         return pdf
                 
-def get_mass(basis):
-    lst = [b.get_mass().reshape([1,b.get_dimension(),b.get_dimension(),1]) for b in basis]
-    lst_inv = [np.linalg.inv(b.get_mass()).reshape([1,b.get_dimension(),b.get_dimension(),1]) for b in basis]
-    return tt.matrix().from_list(lst), tt.matrix().from_list(lst_inv)
-
-def get_stiff(Att_extended,N,pts_list,ws_list,basis):
-    Np = len(basis)
-    
-    lst_cores = Att_extended.to_list(Att_extended)
-    
-    for i in range(len(N),len(N)+Np):
-        
-        coreA = lst_cores[i]
-        coreAA = lst_cores[i]
-        P = basis[i-len(N)](pts_list[i-len(N)])
-        # print(i, i-len(N),P.shape,ws_list[i-len(N)].shape,np.sum(ws_list[i-len(N)]),basis[i-len(N)].domain)
-        coreA = np.einsum('abcd,bc->abcd',coreA,np.diag(ws_list[i-len(N)]))
-        coreA = np.einsum('abcd,nb->ancd',coreA,P)
-        coreA = np.einsum('ancd,lc->anld',coreA,P)
-        
-        core_new = np.zeros((coreAA.shape[0],coreAA.shape[1],coreAA.shape[3]))
-        for p in range(basis[i-len(N)].get_dimension()):
-            core_new[:,p,:] = coreAA[:,p,p,:]
-            
-        core_new = np.einsum('apb,p,mp,lp->amlb',core_new,ws_list[i-len(N)],P,P)
-            
-        # print(np.linalg.norm(core_new-coreA)/np.linalg.norm(core_new))
-        # coreA = np.einsum('anld,nl->anld',coreA,P)
-        
-        # coreA = np.einsum('abcd,bc->abcd',coreA,np.diag(ws_list[len(N)-i]))
-        # print(coreAA[-1,:,:,-1])
-        lst_cores[i] = coreA
-
-    Aext = tt.matrix().from_list(lst_cores)
-    return Aext
- 
-def interpolate_cme_tt(Att_extended,N,pts_list,ws_list,basis):
-    Np = len(basis)
-    
-    lst_cores = Att_extended.to_list(Att_extended)
-    
-    for i in range(len(N),len(N)+Np):
-        
-        coreA = lst_cores[i]
-        
-        
-        core_new = np.zeros((coreA.shape[0],coreAA.shape[1],coreAA.shape[3]))
-        for p in range(basis[len(N)-i].get_dimension()):
-            core_new[:,p,:] = coreAA[:,p,p,:]
-            
-        core_new = np.einsum('apb,p,mp->amb',core_new,ws_list[len(N)-i],P)
-            
-        print(np.linalg.norm(core_new-coreA)/np.linalg.norm(core_new))
-        # coreA = np.einsum('anld,nl->anld',coreA,P)
-        
-        # coreA = np.einsum('abcd,bc->abcd',coreA,np.diag(ws_list[len(N)-i]))
-        lst_cores[i] = core_new
-
-    Aext = tt.matrix().from_list(lst_cores)
-    return Aext
-
-
-
-def extend_cme(Alist, pts_rates):
-    n = len(Alist)
-    
-    for i,pts in enumerate(pts_rates):
-        if pts.size!=1:
-            for k in range(n):
-                Alist[k] = tt.kron(Alist[k],tt.eye([pts.size]) if k!=i else tt.matrix(np.diag(pts)))
-        else:
-            Alist[i] = Alist[i]*pts[0]
-            
-    Att = Alist[0]*0
-    for A in Alist: Att += A
-    
-    return Att
