@@ -15,9 +15,10 @@ def points_weights(a,b,nl):
     ws = (b-a) / 2  *ws
     return pts, ws
 
+class UnivariateBasis():
+    pass
 
-
-class LegendreBasis():
+class LegendreBasis(UnivariateBasis):
     def __init__(self, dim, domain = [-1,1]):
         self.__dim = dim
         self.__domain = domain
@@ -54,7 +55,7 @@ class LegendreBasis():
     @property
     def int(self):
         """
-        
+        Return 
 
         Returns:
             _type_: _description_
@@ -107,7 +108,7 @@ class LegendreBasis():
         return p, w
     
     
-class ChebyBasis():
+class ChebyBasis(UnivariateBasis):
     def __init__(self, dim, domain = [-1,1]):
         self.dim = dim
         self.domain = domain
@@ -165,17 +166,8 @@ class ChebyBasis():
        
         return np.linalg.solve(self.mass,b).flatten()
 
-def lagrange_basis(x,k,n):
-    
-    y= np.poly1d([1.0])
-    const = 1
-    for j in range ( n ):
-        if k!=j:
-            y*=np.poly1d([1,-x[j]]) 
-            const *= ( x[k]-x[j] )
-    return y/const
 
-class LagrangeBasis():
+class LagrangeBasis(UnivariateBasis):
     def __init__(self, knots, domain = None):
         self.__dim = len(knots)
         if domain is None:
@@ -232,7 +224,7 @@ class LagrangeBasis():
     def integration_points(self,mult = 2):
         return points_weights(self.domain[0], self.domain[1], self.deg*mult)
         
-class DiracDeltaBase():
+class DiracDeltaBase(UnivariateBasis):
     def __init__(self, n, pts = None):
         self.__dim = n
         if pts is None:
@@ -273,10 +265,17 @@ class DiracDeltaBase():
         return self.__pts, np.ones((self.__dim,))/self.__dim
         
         
-class BSplineBasis:
+class BSplineBasis(UnivariateBasis):
     
     def __init__(self, dim, domain = [-1,1],deg = 1):
+        """
         
+
+        Args:
+            dim (int): the dimension of the basis.
+            domain (list[int], optional): the interval where the basis functions are defined. Defaults to [-1,1].
+            deg (int, optional): the degree of the B-spline basis. Defaults to 1.
+        """
         self.__dim = dim
         self.__deg = deg
         self.__domain = domain
@@ -331,11 +330,7 @@ class BSplineBasis:
         # self.___int_bspp_bspp = int_bspp
         self.__int_bsp = int_bsp
         
-    
-    @property
-    def dimension(self):
-        return self.__dim
-    
+        
     @property 
     def dim(self):
         return self.__dim
