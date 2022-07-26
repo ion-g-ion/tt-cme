@@ -110,7 +110,7 @@ class LegendreBasis(UnivariateBasis):
     
 class ChebyBasis(UnivariateBasis):
     def __init__(self, dim, domain = [-1,1]):
-        self.dim = dim
+        self.__dim = dim
         self.domain = domain
         self.basis = [ np.polynomial.chebyshev.Chebyshev.basis(i,domain) for i in range(dim) ]
         self.__stiff = np.zeros((dim,dim))
@@ -138,9 +138,16 @@ class ChebyBasis(UnivariateBasis):
     def get_integral(self):
         return self.__ints
     
-    def get_dimension(self):
-        return self.dim
-    
+    @property
+    def dim(self):
+        """
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        """
+        return self.__dim
+        
     @property
     def stiff(self):
         return self.__stiff
@@ -203,6 +210,12 @@ class LagrangeBasis(UnivariateBasis):
 
     @property
     def dim(self):
+        """
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        """
         return self.__dim
     
     @property
@@ -243,6 +256,12 @@ class DiracDeltaBase(UnivariateBasis):
 
     @property
     def dim(self):
+        """
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        """
         return self.__dim
     
     @property
@@ -333,6 +352,12 @@ class BSplineBasis(UnivariateBasis):
         
     @property 
     def dim(self):
+        """
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        """
         return self.__dim
 
     @property

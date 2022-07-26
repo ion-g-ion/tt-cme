@@ -1,0 +1,1615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>TTCME.ttcme API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>TTCME.ttcme</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import torch as tn 
+import torchtt as tntt
+import numpy as np
+import math
+import scipy.sparse as sps
+from ._ssa import GillespieMultiple, Gillespie, Observations_grid
+
+class ChemicalReaction:
+
+    def __init__(self, species, formula, constant, decomposable_propensity=[], params = []):
+
+        self.__species = species.copy()
+        self.__formula = formula
+        self.__params = params.copy()
+
+        
+        
+        self.__const = constant
+        d = len(species)
+
+        before, after = formula.split(&#34;-&gt;&#34;)
+        
+        pre = np.zeros((d,),np.int64)
+        for b in before.split(&#39;+&#39;):
+            b = b.strip()
+            b = b.split(&#39;*&#39;)
+            if(len(b)==1):
+                if len(b[0].strip())&gt;0: pre[self.__species.index(b[0].strip())] = 1
+            else:
+                if len(b[1].strip())&gt;0: pre[self.__species.index(b[1].strip())] = int(b[0].strip())
+
+        self.__pre = pre
+
+        post = np.zeros((d,), np.int64)
+        for a in after.split(&#39;+&#39;):
+            a = a.strip()
+            a = a.split(&#39;*&#39;)
+
+            if(len(a)==1):
+                if len(a[0].strip())&gt;0: post[self.__species.index(a[0].strip())] = 1
+            else:
+                if len(a[1].strip())&gt;0: post[self.__species.index(a[1].strip())] = int(a[0].strip())
+
+        self.__post = post
+
+        if len(decomposable_propensity)&gt;0:
+            self.__propensities = decomposable_propensity
+        else:
+            self.__propensities = []
+            for k in range(len(species)):
+                if len(self.__params)&gt;0 :
+                    prop = lambda q: lambda x,*params: math.comb(x,q)
+                else:
+                    prop = lambda q: lambda x: math.comb(x,q)
+                self.__propensities.append(prop(self.__pre[k]))
+
+    def __repr__(self):
+        &#34;&#34;&#34;
+
+        Returns:
+            str: _description_
+        &#34;&#34;&#34;
+        s = &#39;Chemical reaction: &#39;+self.__formula + &#39; with parameters: &#39;+str(self.__params) 
+        return s
+
+    @property
+    def pre(self):
+        &#34;&#34;&#34;
+        
+        &#34;&#34;&#34;
+        return self.__pre.copy()
+
+    @property
+    def post(self):
+        return self.__post.copy()
+    
+    @property
+    def propensity(self):
+        &#34;&#34;&#34;
+        Return the propensities
+
+        Returns:
+            list[callable]: the propensities.
+        &#34;&#34;&#34;
+        return self.__propensities
+
+    @property
+    def params(self):
+        return self.__params.copy()
+    
+    @property
+    def const(self):
+        if isinstance(self.__const,str):
+            return None
+        else:
+            return self.__const
+
+    def cme_operator_tt(self, N , parameter_grid):
+        Att = None
+
+
+        if len(self.__params)==0 or len(self.__params)==1 and self.__const == self.__params[0]:
+            A1 = []
+            A2 = []
+
+            for k in range(len(N)):
+                core = tn.zeros((N[k],N[k]))
+                for j in range(N[k]):
+                    core[j,j] = self.__propensities[k](j) if j+(self.__post[k]-self.__pre[k])&gt;=0 and  j+(self.__post[k]-self.__pre[k])&lt;N[k] else 0.0           
+                A1.append(core)
+
+                core = tn.zeros((N[k],N[k]))
+                for j in range(N[k]):
+                    if j+(self.__post[k]-self.__pre[k])&gt;=0 and  j+(self.__post[k]-self.__pre[k])&lt;N[k]:
+                        core[j+(self.__post[k]-self.__pre[k]),j] = self.__propensities[k](j)          
+                A2.append(core)
+            
+            Att = (tntt.rank1TT(A2) - tntt.rank1TT(A1))
+            if len(self.__params)==0:
+                Att = self.__const * Att
+            else:
+                Att = Att ** tntt.rank1TT([tn.diag(parameter_grid[0])])
+
+            Att = Att.round(1e-18)
+        else:
+            ## TODO : more comp;icated stuff
+            pass
+
+        return Att
+    
+    def construct_generator(self, N, params = None):
+        idx_row = None
+        idx_col = None
+        vals = None
+
+        num_states = np.prod(N)
+
+        I = list(range(num_states))
+        Xk = np.array(np.unravel_index(np.arange(num_states), N)).transpose()
+
+        Xp = Xk + (self.__post - self.__pre)
+        idx_keep = np.logical_and(np.all(Xp &gt;= 0, axis=1), np.all(Xp &lt; N, axis=1))
+
+        # print(Xk)
+        # print(Xp)
+        # add diagonal 
+        tmp = np.arange(num_states)
+        tmp = tmp[idx_keep]
+           
+        idx_row = tmp
+        idx_col = tmp
+
+        tmp = Xk[idx_keep, :]
+
+        vals = np.ones((tmp.shape[0],))
+        if params != None:  
+            if isinstance(self.__const,str):
+                vals = -vals * params[self.__params.index(self.__const)]
+            else:
+                vals = -self.__const * vals
+            for k in range(len(self.__species)):
+                vals *= np.array(list(map( lambda x: self.__propensities[k](x,*params), tmp[:,k])))
+        else:
+            vals = -self.__const * vals
+            for k in range(len(self.__species)):
+                vals *= np.array(list(map(lambda x: self.__propensities[k](x), tmp[:,k])))
+            
+        # add non diagonal
+        tmp_col = np.arange(num_states)
+        tmp_col = tmp_col[idx_keep]
+
+        Xp = Xp[idx_keep, :]
+
+        tmp_row = np.ravel_multi_index(Xp.transpose(), N)
+        
+        tmp = Xk[idx_keep, :]
+        tmp_val = np.ones((tmp.shape[0],))
+        if params != None:  
+            if isinstance(self.__const,str):
+                tmp_val = tmp_val * params[self.__params.index(self.__const)]
+            else:
+                tmp_val = self.__const * tmp_val
+            for k in range(len(self.__species)):
+                tmp_val *= np.array(list(map(lambda x: self.__propensities[k](x,*params), tmp[:,k])))
+        else:
+            tmp_val = self.__const * tmp_val
+            for k in range(len(self.__species)):
+                tmp_val *= np.array(list(map(lambda x: self.__propensities[k](x), tmp[:,k])))
+
+        idx_row = np.concatenate((idx_row,tmp_row))
+        idx_col = np.concatenate((idx_col,tmp_col))
+        vals = np.concatenate((vals,tmp_val))
+        
+        #print(np.array(vals), np.array(idx_row), np.array(idx_col))
+            
+        
+        vals = np.array(vals)
+        idx_row = np.array(idx_row)
+        idx_col = np.array(idx_col)
+            
+        return  sps.csr_matrix((vals, (idx_row, idx_col)), shape=(num_states, num_states))
+
+class ReactionSystem:
+
+    def __init__(self, species, reactions, params = []):
+        &#34;&#34;&#34;
+        Reactio system class. 
+
+        Args:
+            species (list[str]): the names of the species.
+            reactions (list[ChemicalReaction]): _description_
+            params (list, optional): _description_. Defaults to [].
+        &#34;&#34;&#34;
+        self.__species = species.copy()
+        self.__reactions = reactions.copy()
+        self.__d = len(species)
+
+        self.__params = params.copy()
+
+    @property
+    def reactions(self):
+        &#34;&#34;&#34;
+        list[ChemicalReaction]: the reactions.
+        &#34;&#34;&#34;
+        return self.__reactions
+
+    def __repr__(self):
+        &#34;&#34;&#34;
+        Represent the instance as a string.
+
+        Returns:
+            str: the representation.
+        &#34;&#34;&#34;
+        s =  &#34;Chemical reaction system\nSpecies involved: &#34;+&#34;,&#34;.join(self.__species)
+        s += &#34;\nReactions:\n&#34; + &#34;\n&#34;.join([ str(r) for r in self.__reactions]) 
+        return s
+
+    def __call__(self):
+        pass
+
+    def add_reaction(self, reaction):
+        &#34;&#34;&#34;
+        Add a chemical reaction to the system.
+
+        Args:
+            reaction (ChemicalReaction): the reaction to be added.
+        &#34;&#34;&#34;
+        self.__reactions.append(reaction)
+
+    def generator_TT_parameters(self, N, params = [], eps = 1e-14):
+
+        num_r = len(self.__reactions)
+
+
+        Att = tntt.eye(N+[p.shape[0] for p in params])*0
+
+        for i in range(num_r):
+            index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+            if sorted(index_params) != index_params:
+                raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+            Atmp = self.__reactions[i].cme_operator_tt(N,[params[i] for i in index_params])
+
+            cores = Atmp.cores[:len(N)].copy()
+            
+            kk = len(N)
+            for k in range(len(params)):
+                if self.__params[k] in self.__reactions[i].params:
+                    cores.append(Atmp.cores[kk])
+                    kk += 1
+                else:
+                    cores.append(tn.einsum(&#39;ij,kl-&gt;iklj&#39;,tn.eye(cores[-1].shape[-1]), tn.eye(params[k].shape[0])))
+            Atmp = tntt.TT(cores)
+
+            Att = Att + Atmp
+            Att = Att.round(eps)
+
+        return Att
+    
+    def generatorTT(self, N,basis_params = [], eps = 1e-14):
+
+        num_r = len(self.__reactions)
+
+
+        Att = tntt.eye(N+[b.dim for b in basis_params])*0
+
+        pts = [tn.tensor(b.interpolation_pts[0]) for b in basis_params]
+        Ms = [tn.linalg.inv(tn.tensor(b.interpolation_pts[1]).T) for b in basis_params]
+
+        for i in range(num_r):
+            index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+            if sorted(index_params) != index_params:
+                raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+            Atmp = self.__reactions[i].cme_operator_tt(N,[pts[i] for i in index_params])
+
+            cores = Atmp.cores[:len(N)].copy()
+            
+            kk = len(N)
+            for k in range(len(basis_params)):
+                if self.__params[k] in self.__reactions[i].params:
+                    cores.append(Atmp.cores[kk])
+                    kk += 1
+                else:
+                    cores.append(tn.einsum(&#39;ij,kl-&gt;iklj&#39;,tn.eye(cores[-1].shape[-1]), tn.eye(basis_params[k].dim)))
+            Atmp = tntt.TT(cores)
+
+            Att = Att + Atmp
+            Att = Att.round(eps)
+
+        cores = Att.cores
+
+        for k in range(len(basis_params)):
+            ctemp = tn.diagonal(cores[len(N)+k],dim1=1,dim2=2)
+            ctemp = tn.einsum(&#39;ij,klj-&gt;kil&#39;,Ms[k],ctemp)
+            cores[len(N)+k] = tn.einsum(&#39;kil,ij-&gt;kijl&#39;,ctemp,tn.eye(basis_params[k].dim))
+
+        Att = tntt.TT(cores)
+        return Att
+    
+    def generator_tt_galerkin(self, N, basis_params, eps = 1e-12):
+
+        pts = [tn.tensor(b.integration_points(4)[0]) for b in basis_params]
+        ws  = [tn.tensor(b.integration_points(4)[1]) for b in basis_params]
+        
+        Att = self.generator_TT_parameters(N, pts, eps)
+        cores = Att.cores
+
+        for i in range(len(N), len(Att.N)):
+            core = cores[i]
+
+            P = tn.tensor(basis_params[i-len(N)](pts[i-len(N)]))
+
+            core = tn.einsum(&#39;abcd,bc-&gt;abcd&#39;,core,tn.diag(ws[i-len(N)]))
+            core = tn.einsum(&#39;abcd,nb-&gt;ancd&#39;,core,P)
+            core = tn.einsum(&#39;ancd,lc-&gt;anld&#39;,core,P)
+
+            core_new = np.zeros((cores[i].shape[0],cores[i].shape[1],cores[i].shape[3]))
+            for p in range(basis_params[i-len(N)].dim):
+                core_new[:,p,:] = cores[i][:,p,p,:]
+                
+            core_new = np.einsum(&#39;apb,p,mp,lp-&gt;amlb&#39;,core_new,ws[i-len(N)],P,P)
+                
+            # print(np.linalg.norm(core_new-coreA)/np.linalg.norm(core_new))
+            # coreA = np.einsum(&#39;anld,nl-&gt;anld&#39;,coreA,P)
+            
+            # coreA = np.einsum(&#39;abcd,bc-&gt;abcd&#39;,coreA,np.diag(ws_list[len(N)-i]))
+            # print(coreAA[-1,:,:,-1])
+            cores[i] = core.clone()
+
+        Stt = tntt.TT(cores)
+
+        Mtt_inv = tntt.eye(N) ** tntt.rank1TT([tn.tensor(np.linalg.inv(b.mass)) for b in basis_params])
+        Mtt = tntt.eye(N) ** tntt.rank1TT([tn.tensor(b.mass) for b in basis_params])
+
+        return Stt, Mtt, Mtt_inv
+    
+    def generator_sparse(self, N, params = None):
+        &#34;&#34;&#34;
+        Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+        
+
+        Args:
+            N (list[int]): the trucnatikn of the CME in every direction.
+            params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+        Raises:
+            Exception: _description_Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            scipy.sparse.csr_matrix: the generator in sparse format.
+        &#34;&#34;&#34;
+        num_r = len(self.__reactions)
+
+        Gen = None
+
+        for i in range(num_r):
+            if not params is None:
+                index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+                if sorted(index_params) != index_params:
+                    raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+                tmp = self.__reactions[i].construct_generator(N,params[index_params])
+
+
+
+            else:
+                tmp = self.__reactions[i].construct_generator(N)
+
+            if Gen != None:
+                Gen += tmp
+            else:
+                Gen = tmp
+
+        return Gen
+
+    def ssa(self,x0,time,Ns = 1):
+        &#34;&#34;&#34;
+        Run the `SSA` algorithm to obtain a sample of size Ns.        
+
+        Args:
+            x0 (numpy.array): the initial state (length d). 
+            time (numpy.array): the time grid for observing the states.
+            Ns (int, optional): sample size. Defaults to 1.
+
+        Returns:
+            numpy.array: the states Ns x d.
+        &#34;&#34;&#34;
+
+        if x0.ndim==1 :
+            x0 = np.tile(x0.reshape([-1,1]),Ns).transpose()
+        Pre = []
+        nu = []
+        C = []
+        for r in self.__reactions:
+            Pre.append(r.pre)
+            nu.append(r.post-r.pre)
+            C.append(r.const)
+
+        Sample = GillespieMultiple(x0.astype(np.int64),Ns,time.astype(np.float64), np.array(Pre).astype(np.int64), np.array(nu).astype(np.int64), np.array(C).astype(np.float64))
+        return Sample
+    
+    def ssa_single(self, x0, time_max):
+        &#34;&#34;&#34;
+        Compute a single trajectory using the `SSA` algorithm.
+
+        Args:
+            x0 (list[int]): the initial state.
+            time_max (float): the maximum time for the simulation.
+
+        Returns:
+            (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+        &#34;&#34;&#34;
+        Pre = []
+        nu = []
+        C = []
+        for r in self.__reactions:
+            Pre.append(r.pre)
+            nu.append(r.post-r.pre)
+            C.append(r.const)
+        return Gillespie(np.array(x0),time_max, np.array(Pre),np.array(nu),np.array(C))
+    
+    def jump_process_to_states(self, time_grid, reaction_time, reaction_jumps):
+        &#34;&#34;&#34;
+        Discretize the output of `TTCME.ssa_single()` on the given time grid.
+
+        Args:
+            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+            reaction_time (numpy.array): the reaction times.
+            reaction_jumps (numpy.array): the reaction jumps.
+
+        Returns:
+            _type_: _description_
+        &#34;&#34;&#34;
+        states = Observations_grid(time_grid, reaction_time, reaction_jumps)
+        return states</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="TTCME.ttcme.ChemicalReaction"><code class="flex name class">
+<span>class <span class="ident">ChemicalReaction</span></span>
+<span>(</span><span>species, formula, constant, decomposable_propensity=[], params=[])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChemicalReaction:
+
+    def __init__(self, species, formula, constant, decomposable_propensity=[], params = []):
+
+        self.__species = species.copy()
+        self.__formula = formula
+        self.__params = params.copy()
+
+        
+        
+        self.__const = constant
+        d = len(species)
+
+        before, after = formula.split(&#34;-&gt;&#34;)
+        
+        pre = np.zeros((d,),np.int64)
+        for b in before.split(&#39;+&#39;):
+            b = b.strip()
+            b = b.split(&#39;*&#39;)
+            if(len(b)==1):
+                if len(b[0].strip())&gt;0: pre[self.__species.index(b[0].strip())] = 1
+            else:
+                if len(b[1].strip())&gt;0: pre[self.__species.index(b[1].strip())] = int(b[0].strip())
+
+        self.__pre = pre
+
+        post = np.zeros((d,), np.int64)
+        for a in after.split(&#39;+&#39;):
+            a = a.strip()
+            a = a.split(&#39;*&#39;)
+
+            if(len(a)==1):
+                if len(a[0].strip())&gt;0: post[self.__species.index(a[0].strip())] = 1
+            else:
+                if len(a[1].strip())&gt;0: post[self.__species.index(a[1].strip())] = int(a[0].strip())
+
+        self.__post = post
+
+        if len(decomposable_propensity)&gt;0:
+            self.__propensities = decomposable_propensity
+        else:
+            self.__propensities = []
+            for k in range(len(species)):
+                if len(self.__params)&gt;0 :
+                    prop = lambda q: lambda x,*params: math.comb(x,q)
+                else:
+                    prop = lambda q: lambda x: math.comb(x,q)
+                self.__propensities.append(prop(self.__pre[k]))
+
+    def __repr__(self):
+        &#34;&#34;&#34;
+
+        Returns:
+            str: _description_
+        &#34;&#34;&#34;
+        s = &#39;Chemical reaction: &#39;+self.__formula + &#39; with parameters: &#39;+str(self.__params) 
+        return s
+
+    @property
+    def pre(self):
+        &#34;&#34;&#34;
+        
+        &#34;&#34;&#34;
+        return self.__pre.copy()
+
+    @property
+    def post(self):
+        return self.__post.copy()
+    
+    @property
+    def propensity(self):
+        &#34;&#34;&#34;
+        Return the propensities
+
+        Returns:
+            list[callable]: the propensities.
+        &#34;&#34;&#34;
+        return self.__propensities
+
+    @property
+    def params(self):
+        return self.__params.copy()
+    
+    @property
+    def const(self):
+        if isinstance(self.__const,str):
+            return None
+        else:
+            return self.__const
+
+    def cme_operator_tt(self, N , parameter_grid):
+        Att = None
+
+
+        if len(self.__params)==0 or len(self.__params)==1 and self.__const == self.__params[0]:
+            A1 = []
+            A2 = []
+
+            for k in range(len(N)):
+                core = tn.zeros((N[k],N[k]))
+                for j in range(N[k]):
+                    core[j,j] = self.__propensities[k](j) if j+(self.__post[k]-self.__pre[k])&gt;=0 and  j+(self.__post[k]-self.__pre[k])&lt;N[k] else 0.0           
+                A1.append(core)
+
+                core = tn.zeros((N[k],N[k]))
+                for j in range(N[k]):
+                    if j+(self.__post[k]-self.__pre[k])&gt;=0 and  j+(self.__post[k]-self.__pre[k])&lt;N[k]:
+                        core[j+(self.__post[k]-self.__pre[k]),j] = self.__propensities[k](j)          
+                A2.append(core)
+            
+            Att = (tntt.rank1TT(A2) - tntt.rank1TT(A1))
+            if len(self.__params)==0:
+                Att = self.__const * Att
+            else:
+                Att = Att ** tntt.rank1TT([tn.diag(parameter_grid[0])])
+
+            Att = Att.round(1e-18)
+        else:
+            ## TODO : more comp;icated stuff
+            pass
+
+        return Att
+    
+    def construct_generator(self, N, params = None):
+        idx_row = None
+        idx_col = None
+        vals = None
+
+        num_states = np.prod(N)
+
+        I = list(range(num_states))
+        Xk = np.array(np.unravel_index(np.arange(num_states), N)).transpose()
+
+        Xp = Xk + (self.__post - self.__pre)
+        idx_keep = np.logical_and(np.all(Xp &gt;= 0, axis=1), np.all(Xp &lt; N, axis=1))
+
+        # print(Xk)
+        # print(Xp)
+        # add diagonal 
+        tmp = np.arange(num_states)
+        tmp = tmp[idx_keep]
+           
+        idx_row = tmp
+        idx_col = tmp
+
+        tmp = Xk[idx_keep, :]
+
+        vals = np.ones((tmp.shape[0],))
+        if params != None:  
+            if isinstance(self.__const,str):
+                vals = -vals * params[self.__params.index(self.__const)]
+            else:
+                vals = -self.__const * vals
+            for k in range(len(self.__species)):
+                vals *= np.array(list(map( lambda x: self.__propensities[k](x,*params), tmp[:,k])))
+        else:
+            vals = -self.__const * vals
+            for k in range(len(self.__species)):
+                vals *= np.array(list(map(lambda x: self.__propensities[k](x), tmp[:,k])))
+            
+        # add non diagonal
+        tmp_col = np.arange(num_states)
+        tmp_col = tmp_col[idx_keep]
+
+        Xp = Xp[idx_keep, :]
+
+        tmp_row = np.ravel_multi_index(Xp.transpose(), N)
+        
+        tmp = Xk[idx_keep, :]
+        tmp_val = np.ones((tmp.shape[0],))
+        if params != None:  
+            if isinstance(self.__const,str):
+                tmp_val = tmp_val * params[self.__params.index(self.__const)]
+            else:
+                tmp_val = self.__const * tmp_val
+            for k in range(len(self.__species)):
+                tmp_val *= np.array(list(map(lambda x: self.__propensities[k](x,*params), tmp[:,k])))
+        else:
+            tmp_val = self.__const * tmp_val
+            for k in range(len(self.__species)):
+                tmp_val *= np.array(list(map(lambda x: self.__propensities[k](x), tmp[:,k])))
+
+        idx_row = np.concatenate((idx_row,tmp_row))
+        idx_col = np.concatenate((idx_col,tmp_col))
+        vals = np.concatenate((vals,tmp_val))
+        
+        #print(np.array(vals), np.array(idx_row), np.array(idx_col))
+            
+        
+        vals = np.array(vals)
+        idx_row = np.array(idx_row)
+        idx_col = np.array(idx_col)
+            
+        return  sps.csr_matrix((vals, (idx_row, idx_col)), shape=(num_states, num_states))</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.ttcme.ChemicalReaction.const"><code class="name">var <span class="ident">const</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def const(self):
+    if isinstance(self.__const,str):
+        return None
+    else:
+        return self.__const</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ChemicalReaction.params"><code class="name">var <span class="ident">params</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def params(self):
+    return self.__params.copy()</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ChemicalReaction.post"><code class="name">var <span class="ident">post</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def post(self):
+    return self.__post.copy()</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ChemicalReaction.pre"><code class="name">var <span class="ident">pre</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def pre(self):
+    &#34;&#34;&#34;
+    
+    &#34;&#34;&#34;
+    return self.__pre.copy()</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ChemicalReaction.propensity"><code class="name">var <span class="ident">propensity</span></code></dt>
+<dd>
+<div class="desc"><p>Return the propensities</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[callable]</code></dt>
+<dd>the propensities.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def propensity(self):
+    &#34;&#34;&#34;
+    Return the propensities
+
+    Returns:
+        list[callable]: the propensities.
+    &#34;&#34;&#34;
+    return self.__propensities</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.ttcme.ChemicalReaction.cme_operator_tt"><code class="name flex">
+<span>def <span class="ident">cme_operator_tt</span></span>(<span>self, N, parameter_grid)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cme_operator_tt(self, N , parameter_grid):
+    Att = None
+
+
+    if len(self.__params)==0 or len(self.__params)==1 and self.__const == self.__params[0]:
+        A1 = []
+        A2 = []
+
+        for k in range(len(N)):
+            core = tn.zeros((N[k],N[k]))
+            for j in range(N[k]):
+                core[j,j] = self.__propensities[k](j) if j+(self.__post[k]-self.__pre[k])&gt;=0 and  j+(self.__post[k]-self.__pre[k])&lt;N[k] else 0.0           
+            A1.append(core)
+
+            core = tn.zeros((N[k],N[k]))
+            for j in range(N[k]):
+                if j+(self.__post[k]-self.__pre[k])&gt;=0 and  j+(self.__post[k]-self.__pre[k])&lt;N[k]:
+                    core[j+(self.__post[k]-self.__pre[k]),j] = self.__propensities[k](j)          
+            A2.append(core)
+        
+        Att = (tntt.rank1TT(A2) - tntt.rank1TT(A1))
+        if len(self.__params)==0:
+            Att = self.__const * Att
+        else:
+            Att = Att ** tntt.rank1TT([tn.diag(parameter_grid[0])])
+
+        Att = Att.round(1e-18)
+    else:
+        ## TODO : more comp;icated stuff
+        pass
+
+    return Att</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ChemicalReaction.construct_generator"><code class="name flex">
+<span>def <span class="ident">construct_generator</span></span>(<span>self, N, params=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def construct_generator(self, N, params = None):
+    idx_row = None
+    idx_col = None
+    vals = None
+
+    num_states = np.prod(N)
+
+    I = list(range(num_states))
+    Xk = np.array(np.unravel_index(np.arange(num_states), N)).transpose()
+
+    Xp = Xk + (self.__post - self.__pre)
+    idx_keep = np.logical_and(np.all(Xp &gt;= 0, axis=1), np.all(Xp &lt; N, axis=1))
+
+    # print(Xk)
+    # print(Xp)
+    # add diagonal 
+    tmp = np.arange(num_states)
+    tmp = tmp[idx_keep]
+       
+    idx_row = tmp
+    idx_col = tmp
+
+    tmp = Xk[idx_keep, :]
+
+    vals = np.ones((tmp.shape[0],))
+    if params != None:  
+        if isinstance(self.__const,str):
+            vals = -vals * params[self.__params.index(self.__const)]
+        else:
+            vals = -self.__const * vals
+        for k in range(len(self.__species)):
+            vals *= np.array(list(map( lambda x: self.__propensities[k](x,*params), tmp[:,k])))
+    else:
+        vals = -self.__const * vals
+        for k in range(len(self.__species)):
+            vals *= np.array(list(map(lambda x: self.__propensities[k](x), tmp[:,k])))
+        
+    # add non diagonal
+    tmp_col = np.arange(num_states)
+    tmp_col = tmp_col[idx_keep]
+
+    Xp = Xp[idx_keep, :]
+
+    tmp_row = np.ravel_multi_index(Xp.transpose(), N)
+    
+    tmp = Xk[idx_keep, :]
+    tmp_val = np.ones((tmp.shape[0],))
+    if params != None:  
+        if isinstance(self.__const,str):
+            tmp_val = tmp_val * params[self.__params.index(self.__const)]
+        else:
+            tmp_val = self.__const * tmp_val
+        for k in range(len(self.__species)):
+            tmp_val *= np.array(list(map(lambda x: self.__propensities[k](x,*params), tmp[:,k])))
+    else:
+        tmp_val = self.__const * tmp_val
+        for k in range(len(self.__species)):
+            tmp_val *= np.array(list(map(lambda x: self.__propensities[k](x), tmp[:,k])))
+
+    idx_row = np.concatenate((idx_row,tmp_row))
+    idx_col = np.concatenate((idx_col,tmp_col))
+    vals = np.concatenate((vals,tmp_val))
+    
+    #print(np.array(vals), np.array(idx_row), np.array(idx_col))
+        
+    
+    vals = np.array(vals)
+    idx_row = np.array(idx_row)
+    idx_col = np.array(idx_col)
+        
+    return  sps.csr_matrix((vals, (idx_row, idx_col)), shape=(num_states, num_states))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem"><code class="flex name class">
+<span>class <span class="ident">ReactionSystem</span></span>
+<span>(</span><span>species, reactions, params=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reactio system class. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>species</code></strong> :&ensp;<code>list[str]</code></dt>
+<dd>the names of the species.</dd>
+<dt><strong><code>reactions</code></strong> :&ensp;<code>list[<a title="TTCME.ttcme.ChemicalReaction" href="#TTCME.ttcme.ChemicalReaction">ChemicalReaction</a>]</code></dt>
+<dd><em>description</em></dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd><em>description</em>. Defaults to [].</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ReactionSystem:
+
+    def __init__(self, species, reactions, params = []):
+        &#34;&#34;&#34;
+        Reactio system class. 
+
+        Args:
+            species (list[str]): the names of the species.
+            reactions (list[ChemicalReaction]): _description_
+            params (list, optional): _description_. Defaults to [].
+        &#34;&#34;&#34;
+        self.__species = species.copy()
+        self.__reactions = reactions.copy()
+        self.__d = len(species)
+
+        self.__params = params.copy()
+
+    @property
+    def reactions(self):
+        &#34;&#34;&#34;
+        list[ChemicalReaction]: the reactions.
+        &#34;&#34;&#34;
+        return self.__reactions
+
+    def __repr__(self):
+        &#34;&#34;&#34;
+        Represent the instance as a string.
+
+        Returns:
+            str: the representation.
+        &#34;&#34;&#34;
+        s =  &#34;Chemical reaction system\nSpecies involved: &#34;+&#34;,&#34;.join(self.__species)
+        s += &#34;\nReactions:\n&#34; + &#34;\n&#34;.join([ str(r) for r in self.__reactions]) 
+        return s
+
+    def __call__(self):
+        pass
+
+    def add_reaction(self, reaction):
+        &#34;&#34;&#34;
+        Add a chemical reaction to the system.
+
+        Args:
+            reaction (ChemicalReaction): the reaction to be added.
+        &#34;&#34;&#34;
+        self.__reactions.append(reaction)
+
+    def generator_TT_parameters(self, N, params = [], eps = 1e-14):
+
+        num_r = len(self.__reactions)
+
+
+        Att = tntt.eye(N+[p.shape[0] for p in params])*0
+
+        for i in range(num_r):
+            index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+            if sorted(index_params) != index_params:
+                raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+            Atmp = self.__reactions[i].cme_operator_tt(N,[params[i] for i in index_params])
+
+            cores = Atmp.cores[:len(N)].copy()
+            
+            kk = len(N)
+            for k in range(len(params)):
+                if self.__params[k] in self.__reactions[i].params:
+                    cores.append(Atmp.cores[kk])
+                    kk += 1
+                else:
+                    cores.append(tn.einsum(&#39;ij,kl-&gt;iklj&#39;,tn.eye(cores[-1].shape[-1]), tn.eye(params[k].shape[0])))
+            Atmp = tntt.TT(cores)
+
+            Att = Att + Atmp
+            Att = Att.round(eps)
+
+        return Att
+    
+    def generatorTT(self, N,basis_params = [], eps = 1e-14):
+
+        num_r = len(self.__reactions)
+
+
+        Att = tntt.eye(N+[b.dim for b in basis_params])*0
+
+        pts = [tn.tensor(b.interpolation_pts[0]) for b in basis_params]
+        Ms = [tn.linalg.inv(tn.tensor(b.interpolation_pts[1]).T) for b in basis_params]
+
+        for i in range(num_r):
+            index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+            if sorted(index_params) != index_params:
+                raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+            Atmp = self.__reactions[i].cme_operator_tt(N,[pts[i] for i in index_params])
+
+            cores = Atmp.cores[:len(N)].copy()
+            
+            kk = len(N)
+            for k in range(len(basis_params)):
+                if self.__params[k] in self.__reactions[i].params:
+                    cores.append(Atmp.cores[kk])
+                    kk += 1
+                else:
+                    cores.append(tn.einsum(&#39;ij,kl-&gt;iklj&#39;,tn.eye(cores[-1].shape[-1]), tn.eye(basis_params[k].dim)))
+            Atmp = tntt.TT(cores)
+
+            Att = Att + Atmp
+            Att = Att.round(eps)
+
+        cores = Att.cores
+
+        for k in range(len(basis_params)):
+            ctemp = tn.diagonal(cores[len(N)+k],dim1=1,dim2=2)
+            ctemp = tn.einsum(&#39;ij,klj-&gt;kil&#39;,Ms[k],ctemp)
+            cores[len(N)+k] = tn.einsum(&#39;kil,ij-&gt;kijl&#39;,ctemp,tn.eye(basis_params[k].dim))
+
+        Att = tntt.TT(cores)
+        return Att
+    
+    def generator_tt_galerkin(self, N, basis_params, eps = 1e-12):
+
+        pts = [tn.tensor(b.integration_points(4)[0]) for b in basis_params]
+        ws  = [tn.tensor(b.integration_points(4)[1]) for b in basis_params]
+        
+        Att = self.generator_TT_parameters(N, pts, eps)
+        cores = Att.cores
+
+        for i in range(len(N), len(Att.N)):
+            core = cores[i]
+
+            P = tn.tensor(basis_params[i-len(N)](pts[i-len(N)]))
+
+            core = tn.einsum(&#39;abcd,bc-&gt;abcd&#39;,core,tn.diag(ws[i-len(N)]))
+            core = tn.einsum(&#39;abcd,nb-&gt;ancd&#39;,core,P)
+            core = tn.einsum(&#39;ancd,lc-&gt;anld&#39;,core,P)
+
+            core_new = np.zeros((cores[i].shape[0],cores[i].shape[1],cores[i].shape[3]))
+            for p in range(basis_params[i-len(N)].dim):
+                core_new[:,p,:] = cores[i][:,p,p,:]
+                
+            core_new = np.einsum(&#39;apb,p,mp,lp-&gt;amlb&#39;,core_new,ws[i-len(N)],P,P)
+                
+            # print(np.linalg.norm(core_new-coreA)/np.linalg.norm(core_new))
+            # coreA = np.einsum(&#39;anld,nl-&gt;anld&#39;,coreA,P)
+            
+            # coreA = np.einsum(&#39;abcd,bc-&gt;abcd&#39;,coreA,np.diag(ws_list[len(N)-i]))
+            # print(coreAA[-1,:,:,-1])
+            cores[i] = core.clone()
+
+        Stt = tntt.TT(cores)
+
+        Mtt_inv = tntt.eye(N) ** tntt.rank1TT([tn.tensor(np.linalg.inv(b.mass)) for b in basis_params])
+        Mtt = tntt.eye(N) ** tntt.rank1TT([tn.tensor(b.mass) for b in basis_params])
+
+        return Stt, Mtt, Mtt_inv
+    
+    def generator_sparse(self, N, params = None):
+        &#34;&#34;&#34;
+        Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+        
+
+        Args:
+            N (list[int]): the trucnatikn of the CME in every direction.
+            params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+        Raises:
+            Exception: _description_Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            scipy.sparse.csr_matrix: the generator in sparse format.
+        &#34;&#34;&#34;
+        num_r = len(self.__reactions)
+
+        Gen = None
+
+        for i in range(num_r):
+            if not params is None:
+                index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+                if sorted(index_params) != index_params:
+                    raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+                tmp = self.__reactions[i].construct_generator(N,params[index_params])
+
+
+
+            else:
+                tmp = self.__reactions[i].construct_generator(N)
+
+            if Gen != None:
+                Gen += tmp
+            else:
+                Gen = tmp
+
+        return Gen
+
+    def ssa(self,x0,time,Ns = 1):
+        &#34;&#34;&#34;
+        Run the `SSA` algorithm to obtain a sample of size Ns.        
+
+        Args:
+            x0 (numpy.array): the initial state (length d). 
+            time (numpy.array): the time grid for observing the states.
+            Ns (int, optional): sample size. Defaults to 1.
+
+        Returns:
+            numpy.array: the states Ns x d.
+        &#34;&#34;&#34;
+
+        if x0.ndim==1 :
+            x0 = np.tile(x0.reshape([-1,1]),Ns).transpose()
+        Pre = []
+        nu = []
+        C = []
+        for r in self.__reactions:
+            Pre.append(r.pre)
+            nu.append(r.post-r.pre)
+            C.append(r.const)
+
+        Sample = GillespieMultiple(x0.astype(np.int64),Ns,time.astype(np.float64), np.array(Pre).astype(np.int64), np.array(nu).astype(np.int64), np.array(C).astype(np.float64))
+        return Sample
+    
+    def ssa_single(self, x0, time_max):
+        &#34;&#34;&#34;
+        Compute a single trajectory using the `SSA` algorithm.
+
+        Args:
+            x0 (list[int]): the initial state.
+            time_max (float): the maximum time for the simulation.
+
+        Returns:
+            (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+        &#34;&#34;&#34;
+        Pre = []
+        nu = []
+        C = []
+        for r in self.__reactions:
+            Pre.append(r.pre)
+            nu.append(r.post-r.pre)
+            C.append(r.const)
+        return Gillespie(np.array(x0),time_max, np.array(Pre),np.array(nu),np.array(C))
+    
+    def jump_process_to_states(self, time_grid, reaction_time, reaction_jumps):
+        &#34;&#34;&#34;
+        Discretize the output of `TTCME.ssa_single()` on the given time grid.
+
+        Args:
+            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+            reaction_time (numpy.array): the reaction times.
+            reaction_jumps (numpy.array): the reaction jumps.
+
+        Returns:
+            _type_: _description_
+        &#34;&#34;&#34;
+        states = Observations_grid(time_grid, reaction_time, reaction_jumps)
+        return states</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.ttcme.ReactionSystem.reactions"><code class="name">var <span class="ident">reactions</span></code></dt>
+<dd>
+<div class="desc"><p>list[ChemicalReaction]: the reactions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def reactions(self):
+    &#34;&#34;&#34;
+    list[ChemicalReaction]: the reactions.
+    &#34;&#34;&#34;
+    return self.__reactions</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.ttcme.ReactionSystem.add_reaction"><code class="name flex">
+<span>def <span class="ident">add_reaction</span></span>(<span>self, reaction)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add a chemical reaction to the system.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>reaction</code></strong> :&ensp;<code><a title="TTCME.ttcme.ChemicalReaction" href="#TTCME.ttcme.ChemicalReaction">ChemicalReaction</a></code></dt>
+<dd>the reaction to be added.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_reaction(self, reaction):
+    &#34;&#34;&#34;
+    Add a chemical reaction to the system.
+
+    Args:
+        reaction (ChemicalReaction): the reaction to be added.
+    &#34;&#34;&#34;
+    self.__reactions.append(reaction)</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.generatorTT"><code class="name flex">
+<span>def <span class="ident">generatorTT</span></span>(<span>self, N, basis_params=[], eps=1e-14)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generatorTT(self, N,basis_params = [], eps = 1e-14):
+
+    num_r = len(self.__reactions)
+
+
+    Att = tntt.eye(N+[b.dim for b in basis_params])*0
+
+    pts = [tn.tensor(b.interpolation_pts[0]) for b in basis_params]
+    Ms = [tn.linalg.inv(tn.tensor(b.interpolation_pts[1]).T) for b in basis_params]
+
+    for i in range(num_r):
+        index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+        if sorted(index_params) != index_params:
+            raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+        Atmp = self.__reactions[i].cme_operator_tt(N,[pts[i] for i in index_params])
+
+        cores = Atmp.cores[:len(N)].copy()
+        
+        kk = len(N)
+        for k in range(len(basis_params)):
+            if self.__params[k] in self.__reactions[i].params:
+                cores.append(Atmp.cores[kk])
+                kk += 1
+            else:
+                cores.append(tn.einsum(&#39;ij,kl-&gt;iklj&#39;,tn.eye(cores[-1].shape[-1]), tn.eye(basis_params[k].dim)))
+        Atmp = tntt.TT(cores)
+
+        Att = Att + Atmp
+        Att = Att.round(eps)
+
+    cores = Att.cores
+
+    for k in range(len(basis_params)):
+        ctemp = tn.diagonal(cores[len(N)+k],dim1=1,dim2=2)
+        ctemp = tn.einsum(&#39;ij,klj-&gt;kil&#39;,Ms[k],ctemp)
+        cores[len(N)+k] = tn.einsum(&#39;kil,ij-&gt;kijl&#39;,ctemp,tn.eye(basis_params[k].dim))
+
+    Att = tntt.TT(cores)
+    return Att</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.generator_TT_parameters"><code class="name flex">
+<span>def <span class="ident">generator_TT_parameters</span></span>(<span>self, N, params=[], eps=1e-14)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generator_TT_parameters(self, N, params = [], eps = 1e-14):
+
+    num_r = len(self.__reactions)
+
+
+    Att = tntt.eye(N+[p.shape[0] for p in params])*0
+
+    for i in range(num_r):
+        index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+        if sorted(index_params) != index_params:
+            raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+        Atmp = self.__reactions[i].cme_operator_tt(N,[params[i] for i in index_params])
+
+        cores = Atmp.cores[:len(N)].copy()
+        
+        kk = len(N)
+        for k in range(len(params)):
+            if self.__params[k] in self.__reactions[i].params:
+                cores.append(Atmp.cores[kk])
+                kk += 1
+            else:
+                cores.append(tn.einsum(&#39;ij,kl-&gt;iklj&#39;,tn.eye(cores[-1].shape[-1]), tn.eye(params[k].shape[0])))
+        Atmp = tntt.TT(cores)
+
+        Att = Att + Atmp
+        Att = Att.round(eps)
+
+    return Att</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.generator_sparse"><code class="name flex">
+<span>def <span class="ident">generator_sparse</span></span>(<span>self, N, params=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the CME generator in <code>scipy.sparse.csr_matrix</code> for a fixed parameter passed as an argument.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the trucnatikn of the CME in every direction.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>Union[list[float], numpy.array, None]</code>, optional</dt>
+<dd>The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Exception</code></dt>
+<dd>_description_Parameters of the individual reactions should not appear in other order than given for the entire reaction system.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>scipy.sparse.csr_matrix</code></dt>
+<dd>the generator in sparse format.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generator_sparse(self, N, params = None):
+    &#34;&#34;&#34;
+    Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+    
+
+    Args:
+        N (list[int]): the trucnatikn of the CME in every direction.
+        params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+    Raises:
+        Exception: _description_Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+    Returns:
+        scipy.sparse.csr_matrix: the generator in sparse format.
+    &#34;&#34;&#34;
+    num_r = len(self.__reactions)
+
+    Gen = None
+
+    for i in range(num_r):
+        if not params is None:
+            index_params = [self.__params.index(p) for p in self.__reactions[i].params]
+            if sorted(index_params) != index_params:
+                raise Exception(&#34;Parameters of the individual reactions should not appear in other order than given for the entire reaction system.&#34;)
+
+            tmp = self.__reactions[i].construct_generator(N,params[index_params])
+
+
+
+        else:
+            tmp = self.__reactions[i].construct_generator(N)
+
+        if Gen != None:
+            Gen += tmp
+        else:
+            Gen = tmp
+
+    return Gen</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.generator_tt_galerkin"><code class="name flex">
+<span>def <span class="ident">generator_tt_galerkin</span></span>(<span>self, N, basis_params, eps=1e-12)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generator_tt_galerkin(self, N, basis_params, eps = 1e-12):
+
+    pts = [tn.tensor(b.integration_points(4)[0]) for b in basis_params]
+    ws  = [tn.tensor(b.integration_points(4)[1]) for b in basis_params]
+    
+    Att = self.generator_TT_parameters(N, pts, eps)
+    cores = Att.cores
+
+    for i in range(len(N), len(Att.N)):
+        core = cores[i]
+
+        P = tn.tensor(basis_params[i-len(N)](pts[i-len(N)]))
+
+        core = tn.einsum(&#39;abcd,bc-&gt;abcd&#39;,core,tn.diag(ws[i-len(N)]))
+        core = tn.einsum(&#39;abcd,nb-&gt;ancd&#39;,core,P)
+        core = tn.einsum(&#39;ancd,lc-&gt;anld&#39;,core,P)
+
+        core_new = np.zeros((cores[i].shape[0],cores[i].shape[1],cores[i].shape[3]))
+        for p in range(basis_params[i-len(N)].dim):
+            core_new[:,p,:] = cores[i][:,p,p,:]
+            
+        core_new = np.einsum(&#39;apb,p,mp,lp-&gt;amlb&#39;,core_new,ws[i-len(N)],P,P)
+            
+        # print(np.linalg.norm(core_new-coreA)/np.linalg.norm(core_new))
+        # coreA = np.einsum(&#39;anld,nl-&gt;anld&#39;,coreA,P)
+        
+        # coreA = np.einsum(&#39;abcd,bc-&gt;abcd&#39;,coreA,np.diag(ws_list[len(N)-i]))
+        # print(coreAA[-1,:,:,-1])
+        cores[i] = core.clone()
+
+    Stt = tntt.TT(cores)
+
+    Mtt_inv = tntt.eye(N) ** tntt.rank1TT([tn.tensor(np.linalg.inv(b.mass)) for b in basis_params])
+    Mtt = tntt.eye(N) ** tntt.rank1TT([tn.tensor(b.mass) for b in basis_params])
+
+    return Stt, Mtt, Mtt_inv</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.jump_process_to_states"><code class="name flex">
+<span>def <span class="ident">jump_process_to_states</span></span>(<span>self, time_grid, reaction_time, reaction_jumps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Discretize the output of <code>TTCME.ssa_single()</code> on the given time grid.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time_grid</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>the time grid (time steps must be sorted in ascending order).</dd>
+<dt><strong><code>reaction_time</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>the reaction times.</dd>
+<dt><strong><code>reaction_jumps</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>the reaction jumps.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>_type_</code></dt>
+<dd><em>description</em></dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def jump_process_to_states(self, time_grid, reaction_time, reaction_jumps):
+    &#34;&#34;&#34;
+    Discretize the output of `TTCME.ssa_single()` on the given time grid.
+
+    Args:
+        time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+        reaction_time (numpy.array): the reaction times.
+        reaction_jumps (numpy.array): the reaction jumps.
+
+    Returns:
+        _type_: _description_
+    &#34;&#34;&#34;
+    states = Observations_grid(time_grid, reaction_time, reaction_jumps)
+    return states</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.ssa"><code class="name flex">
+<span>def <span class="ident">ssa</span></span>(<span>self, x0, time, Ns=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Run the <code>SSA</code> algorithm to obtain a sample of size Ns.
+</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x0</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>the initial state (length d). </dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>the time grid for observing the states.</dd>
+<dt><strong><code>Ns</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>sample size. Defaults to 1.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy.array</code></dt>
+<dd>the states Ns x d.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ssa(self,x0,time,Ns = 1):
+    &#34;&#34;&#34;
+    Run the `SSA` algorithm to obtain a sample of size Ns.        
+
+    Args:
+        x0 (numpy.array): the initial state (length d). 
+        time (numpy.array): the time grid for observing the states.
+        Ns (int, optional): sample size. Defaults to 1.
+
+    Returns:
+        numpy.array: the states Ns x d.
+    &#34;&#34;&#34;
+
+    if x0.ndim==1 :
+        x0 = np.tile(x0.reshape([-1,1]),Ns).transpose()
+    Pre = []
+    nu = []
+    C = []
+    for r in self.__reactions:
+        Pre.append(r.pre)
+        nu.append(r.post-r.pre)
+        C.append(r.const)
+
+    Sample = GillespieMultiple(x0.astype(np.int64),Ns,time.astype(np.float64), np.array(Pre).astype(np.int64), np.array(nu).astype(np.int64), np.array(C).astype(np.float64))
+    return Sample</code></pre>
+</details>
+</dd>
+<dt id="TTCME.ttcme.ReactionSystem.ssa_single"><code class="name flex">
+<span>def <span class="ident">ssa_single</span></span>(<span>self, x0, time_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute a single trajectory using the <code>SSA</code> algorithm.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x0</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the initial state.</dd>
+<dt><strong><code>time_max</code></strong> :&ensp;<code>float</code></dt>
+<dd>the maximum time for the simulation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ssa_single(self, x0, time_max):
+    &#34;&#34;&#34;
+    Compute a single trajectory using the `SSA` algorithm.
+
+    Args:
+        x0 (list[int]): the initial state.
+        time_max (float): the maximum time for the simulation.
+
+    Returns:
+        (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+    &#34;&#34;&#34;
+    Pre = []
+    nu = []
+    C = []
+    for r in self.__reactions:
+        Pre.append(r.pre)
+        nu.append(r.post-r.pre)
+        C.append(r.const)
+    return Gillespie(np.array(x0),time_max, np.array(Pre),np.array(nu),np.array(C))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="TTCME" href="index.html">TTCME</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="TTCME.ttcme.ChemicalReaction" href="#TTCME.ttcme.ChemicalReaction">ChemicalReaction</a></code></h4>
+<ul class="two-column">
+<li><code><a title="TTCME.ttcme.ChemicalReaction.cme_operator_tt" href="#TTCME.ttcme.ChemicalReaction.cme_operator_tt">cme_operator_tt</a></code></li>
+<li><code><a title="TTCME.ttcme.ChemicalReaction.const" href="#TTCME.ttcme.ChemicalReaction.const">const</a></code></li>
+<li><code><a title="TTCME.ttcme.ChemicalReaction.construct_generator" href="#TTCME.ttcme.ChemicalReaction.construct_generator">construct_generator</a></code></li>
+<li><code><a title="TTCME.ttcme.ChemicalReaction.params" href="#TTCME.ttcme.ChemicalReaction.params">params</a></code></li>
+<li><code><a title="TTCME.ttcme.ChemicalReaction.post" href="#TTCME.ttcme.ChemicalReaction.post">post</a></code></li>
+<li><code><a title="TTCME.ttcme.ChemicalReaction.pre" href="#TTCME.ttcme.ChemicalReaction.pre">pre</a></code></li>
+<li><code><a title="TTCME.ttcme.ChemicalReaction.propensity" href="#TTCME.ttcme.ChemicalReaction.propensity">propensity</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="TTCME.ttcme.ReactionSystem" href="#TTCME.ttcme.ReactionSystem">ReactionSystem</a></code></h4>
+<ul class="">
+<li><code><a title="TTCME.ttcme.ReactionSystem.add_reaction" href="#TTCME.ttcme.ReactionSystem.add_reaction">add_reaction</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.generatorTT" href="#TTCME.ttcme.ReactionSystem.generatorTT">generatorTT</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.generator_TT_parameters" href="#TTCME.ttcme.ReactionSystem.generator_TT_parameters">generator_TT_parameters</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.generator_sparse" href="#TTCME.ttcme.ReactionSystem.generator_sparse">generator_sparse</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.generator_tt_galerkin" href="#TTCME.ttcme.ReactionSystem.generator_tt_galerkin">generator_tt_galerkin</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.jump_process_to_states" href="#TTCME.ttcme.ReactionSystem.jump_process_to_states">jump_process_to_states</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.reactions" href="#TTCME.ttcme.ReactionSystem.reactions">reactions</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.ssa" href="#TTCME.ttcme.ReactionSystem.ssa">ssa</a></code></li>
+<li><code><a title="TTCME.ttcme.ReactionSystem.ssa_single" href="#TTCME.ttcme.ReactionSystem.ssa_single">ssa_single</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

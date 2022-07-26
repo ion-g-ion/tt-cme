@@ -1,0 +1,1642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>TTCME.basis API documentation</title>
+<meta name="description" content="Implements the basic univariate bases." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>TTCME.basis</code></h1>
+</header>
+<section id="section-intro">
+<p>Implements the basic univariate bases.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Implements the basic univariate bases.    
+
+&#34;&#34;&#34;
+import numpy as np
+import matplotlib.pyplot 
+import scipy
+import scipy.interpolate
+from scipy.interpolate import BSpline
+
+
+def points_weights(a,b,nl):
+    pts,ws = np.polynomial.legendre.leggauss(nl)
+    pts = 0.5 * (b-a) * (pts+1) + a
+    ws = (b-a) / 2  *ws
+    return pts, ws
+
+class UnivariateBasis():
+    pass
+
+class LegendreBasis(UnivariateBasis):
+    def __init__(self, dim, domain = [-1,1]):
+        self.__dim = dim
+        self.__domain = domain
+        self.__basis = [ np.polynomial.legendre.Legendre.basis(i,domain) for i in range(dim) ]
+        self.__stiff = np.zeros((dim,dim))
+        self.__mass = np.zeros((dim,dim))
+        self.__ints = np.zeros(dim)
+        
+
+        for i in range(dim):
+            pint = self.__basis[i].integ()
+            self.__ints[i] = pint(domain[1]) - pint(domain[0])
+            for j in range(dim):
+                pint = (self.__basis[i] * self.__basis[j]).integ()
+                self.__mass[i,j] = pint(domain[1]) - pint(domain[0])
+                pint = (self.__basis[i] * self.__basis[j].deriv()).integ()
+                self.__stiff[i,j] = pint(domain[1]) - pint(domain[0])
+                
+                # pint = (self.basis[i] * self.basis[j].deriv()).integ()
+                # self.stiff[i,j] = pint(domain[1]) - pint(domain[0])
+                
+                
+                
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+
+    @property
+    def int(self):
+        &#34;&#34;&#34;
+        Return 
+
+        Returns:
+            _type_: _description_
+        &#34;&#34;&#34;
+        return self.__ints
+
+    def __repr__(self):
+        return &#39;Legendre basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for b in self.__basis:
+            result.append(b.deriv(deriv)(x))
+        return np.array(result)
+    
+    def get_integral(self):
+        return self.__ints
+    
+    def get_dimension(self):
+        return self.__dim
+    
+    @property
+    def stiff(self):
+        return self.__stiff
+    
+    @property
+    def mass(self):
+        return self.__mass
+
+
+    
+    
+    def interpolate(self,fun):
+        
+        pts,ws = np.polynomial.legendre.leggauss(self.__dim*4)
+        pts = 0.5 * (self.domain[1]-self.domain[0]) * (pts+1) + self.domain[0]
+        ws = (self.domain[1]-self.domain[0]) / 2  *ws
+        
+        vals = fun(pts)*ws
+        
+        b = np.sum(self(pts) * vals,1).reshape([-1,1])
+       
+        return np.linalg.solve(self.mass,b).flatten()
+       
+    def integration_points(self,mult = 3):
+        
+            
+        p, w = points_weights(self.__domain[0],self.__domain[1], self.__dim*mult)
+        
+        return p, w
+    
+    
+class ChebyBasis(UnivariateBasis):
+    def __init__(self, dim, domain = [-1,1]):
+        self.__dim = dim
+        self.domain = domain
+        self.basis = [ np.polynomial.chebyshev.Chebyshev.basis(i,domain) for i in range(dim) ]
+        self.__stiff = np.zeros((dim,dim))
+        self.__mass = np.zeros((dim,dim))
+        self.__ints = np.zeros(dim)
+        
+        for i in range(dim):
+            pint = self.basis[i].integ()
+            self.__ints[i] = pint(domain[1]) - pint(domain[0])
+            for j in range(dim):
+                pint = (self.basis[i] * self.basis[j]).integ()
+                self.__mass[i,j] = pint(domain[1]) - pint(domain[0])
+                pint = (self.basis[i] * self.basis[j].deriv()).integ()
+                self.__stiff[i,j] = pint(domain[1]) - pint(domain[0])
+        
+    def __repr__(self):
+        return &#39;Chebyshev basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for b in self.basis:
+            result.append(b.deriv(deriv)(x))
+        return np.array(result)
+    
+    def get_integral(self):
+        return self.__ints
+    
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+        
+    @property
+    def stiff(self):
+        return self.__stiff
+    
+    @property
+    def mass(self):
+        return self.__mass
+    
+    def plot(self):
+        x = np.linspace(self.domain[0],self.domain[1],self.dim*32)
+        for b in self.basis:
+            matplotlib.pyplot.plot(x,b(x))
+            
+    def interpolate(self,fun):
+        
+        pts,ws = np.polynomial.legendre.leggauss(self.dim*4)
+        pts = 0.5 * (self.domain[1]-self.domain[0]) * (pts+1) + self.domain[0]
+        ws = (self.domain[1]-self.domain[0]) / 2  *ws
+        
+        vals = fun(pts)*ws
+        
+        b = np.sum(self(pts) * vals,1).reshape([-1,1])
+       
+        return np.linalg.solve(self.mass,b).flatten()
+
+
+class LagrangeBasis(UnivariateBasis):
+    def __init__(self, knots, domain = None):
+        self.__dim = len(knots)
+        if domain is None:
+            domain = (min(knots), max(knots))
+        
+        self.__domain = domain
+       
+        self.__pts = knots
+
+        self.__basis = [ scipy.interpolate.lagrange(self.__pts,np.eye(self.__dim)[:,i]) for i in range(self.__dim) ]
+      
+        self.__stiff = np.zeros((self.__dim, self.__dim))
+        self.__mass = np.zeros((self.__dim, self.__dim))
+        self.__ints = np.zeros(self.__dim)
+        
+        for i in range(self.__dim):
+            pint = self.__basis[i].integ()
+            self.__ints[i] = pint(domain[1]) - pint(domain[0])
+            for j in range(self.__dim):
+                pint = (self.__basis[i] * self.__basis[j]).integ()
+                self.__mass[i,j] = pint(domain[1]) - pint(domain[0])
+                pint = (self.__basis[i] * self.__basis[j].deriv()).integ()
+                self.__stiff[i,j] = pint(domain[1]) - pint(domain[0])
+
+    def __repr__(self):
+        return &#39;Lagrange basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for b in self.__basis:
+            result.append(b.deriv(deriv)(x))
+        return np.array(result)
+
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+    
+    @property
+    def stiff(self):
+        return self.__stiff
+    
+    @property
+    def int(self):
+        return self.__ints.flatten()
+    
+    @property
+    def mass(self):
+        return self.__mass
+
+    @property
+    def interpolation_pts(self):
+        return self.__pts, np.eye(self.__dim)
+
+    def integration_points(self,mult = 2):
+        return points_weights(self.domain[0], self.domain[1], self.deg*mult)
+        
+class DiracDeltaBase(UnivariateBasis):
+    def __init__(self, n, pts = None):
+        self.__dim = n
+        if pts is None:
+            self.__pts = np.arange(n) 
+        else:
+            self.__pts = pts 
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for p in self.__pts:
+            result.append(1.0*(p == x))
+        return np.array(result)
+
+    def __repr__(self):
+        return &#39;Dirac-deltas basis defined on {&#39;+str(self.__pts[0])+&#39;, &#39;+str(self.__pts[-1])+&#39;} and dimension &#39;+str(self.__dim)
+
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+    
+    @property
+    def stiff(self):
+        pass
+    
+    @property
+    def int(self):
+        return np.ones((self.__dim,))
+        
+    @property
+    def mass(self):
+        return np.eye(self.__dim)
+
+    @property
+    def interpolation_pts(self):
+        return self.__pts, np.eye(self.__dim)
+
+    def integration_points(self,mult = 2):
+        return self.__pts, np.ones((self.__dim,))/self.__dim
+        
+        
+class BSplineBasis(UnivariateBasis):
+    
+    def __init__(self, dim, domain = [-1,1],deg = 1):
+        &#34;&#34;&#34;
+        
+
+        Args:
+            dim (int): the dimension of the basis.
+            domain (list[int], optional): the interval where the basis functions are defined. Defaults to [-1,1].
+            deg (int, optional): the degree of the B-spline basis. Defaults to 1.
+        &#34;&#34;&#34;
+        self.__dim = dim
+        self.__deg = deg
+        self.__domain = domain
+        knots = np.linspace(domain[0],domain[1],dim+1-deg)
+        self.__N=knots.size+deg-1
+        self.__deg=deg
+        self.__knots=np.hstack( ( np.ones(deg)*knots[0] , knots , np.ones(deg)*knots[-1] ) )
+        self.__spl = []
+        self.__dspl = []
+        for i in range(self.__N):
+            c=np.zeros(self.__N)
+            c[i]=1
+            self.__spl.append(BSpline(self.__knots,c,self.__deg))
+            self.__dspl.append(scipy.interpolate.splder( BSpline(self.__knots,c,self.__deg) ))
+        
+        self.__compact_support_bsp = np.zeros((self.__N,2))
+        for i in range(self.__N):
+            self.__compact_support_bsp[i,0] = self.__knots[i]
+            self.__compact_support_bsp[i,1] = self.__knots[i+self.__deg+1]
+            
+        int_bsp_bsp = np.zeros((self.__N,self.__N))
+        int_bsp = np.zeros((self.__N,1))
+        # int_bsp_v = np.zeros((self.___Nz,1))
+        
+        Pts, Ws =np.polynomial.legendre.leggauss(20)
+        for i in range(self.__N):
+            a=self.__compact_support_bsp[i,0]
+            b=self.__compact_support_bsp[i,1]
+
+            for k in range(self.__knots.size-1):
+                if self.__knots[k]&gt;=a and self.__knots[k+1]&lt;=b:
+                    pts = self.__knots[k]+(Pts+1)*0.5*(self.__knots[k+1]-self.__knots[k])
+                    ws = Ws*(self.__knots[k+1]-self.__knots[k])/2
+                    int_bsp[i,0] += np.sum( self.__call__(pts,i) * ws )
+                    
+            for j in range(i,self.__N):
+                a=self.__compact_support_bsp[j,0]
+                b=self.__compact_support_bsp[i,1]
+                if b&gt;a:
+                    for k in range(self.__knots.size-1):
+                        if self.__knots[k]&gt;=a and self.__knots[k+1]&lt;=b:
+                            pts = self.__knots[k]+(Pts+1)*0.5*(self.__knots[k+1]-self.__knots[k])
+                            ws = Ws*(self.__knots[k+1]-self.__knots[k])/2
+                            int_bsp_bsp[i,j] += np.sum(  self.__call__(pts,i) *self.__call__(pts,j) * ws )
+                            # int_bspp[i,j] += np.sum( self.___bspp(pts)[i,:]* self.bspp(pts)[j,:]*ws )
+                    if i!=j:
+                        int_bsp_bsp[j,i] = int_bsp_bsp[i,j]
+                        # int_bspp[j,i] = int_bspp[i,j]
+                    
+        
+        self.__int_bsp_bsp = int_bsp_bsp
+        # self.___int_bspp_bspp = int_bspp
+        self.__int_bsp = int_bsp
+        
+        
+    @property 
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+
+    @property
+    def mass(self):
+        return self.__int_bsp_bsp
+        
+    @property
+    def int(self):
+        return self.__int_bsp.flatten()
+
+    @property 
+    def stiff(self):
+        return None
+    
+    @property
+    def interpolation_pts(self):
+        xg = self.__greville().flatten()
+        yg = self(xg)
+        return xg, yg
+    
+    def __repr__(self):
+        return &#39;B-spline basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,i=None,derivative=False):
+        if i==None:
+            if derivative:
+                ret = np.array([self.__dspl[i](x) for i in range(self.__N)])
+                return ret
+            else:
+                ret = np.array([self.__spl[i](x) for i in range(self.__N)])
+                return ret
+        else:
+            if derivative:
+                 return self.__dspl[i](x)
+            else:
+                return self.__spl[i](x)
+                
+    def __greville(self):
+        return np.array([np.sum(self.__knots[i+1:i+self.__deg+1]) for i in range(self.__N)])/(self.__deg)
+        
+    def eval_all(self,c,x):
+        c=np.hstack((c,np.zeros(self.__deg-2)))
+        return BSpline(self.__knots,c,self.__deg)(x)
+    
+    
+
+    
+    def derivative(self):
+        bd = scipy.interpolate.splder(BSpline(self.__knots,np.zeros(self.__N+self.__deg-1)+1,self.__deg))
+        return BSplineBasis(np.unique(bd.t), bd.k)
+
+    
+    def integration_points(self,mult = 2):
+        pts = []
+        ws = []
+        
+        ku = np.unique(self.__knots)
+        for i in range(ku.size-1):
+            
+            p, w = points_weights(ku[i], ku[i+1], self.__deg*mult)
+            
+            pts += list(p)
+            ws += list(w)
+            
+        return np.array(pts), np.array(ws)
+            
+    </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="TTCME.basis.points_weights"><code class="name flex">
+<span>def <span class="ident">points_weights</span></span>(<span>a, b, nl)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def points_weights(a,b,nl):
+    pts,ws = np.polynomial.legendre.leggauss(nl)
+    pts = 0.5 * (b-a) * (pts+1) + a
+    ws = (b-a) / 2  *ws
+    return pts, ws</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="TTCME.basis.BSplineBasis"><code class="flex name class">
+<span>class <span class="ident">BSplineBasis</span></span>
+<span>(</span><span>dim, domain=[-1, 1], deg=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>the dimension of the basis.</dd>
+<dt><strong><code>domain</code></strong> :&ensp;<code>list[int]</code>, optional</dt>
+<dd>the interval where the basis functions are defined. Defaults to [-1,1].</dd>
+<dt><strong><code>deg</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>the degree of the B-spline basis. Defaults to 1.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BSplineBasis(UnivariateBasis):
+    
+    def __init__(self, dim, domain = [-1,1],deg = 1):
+        &#34;&#34;&#34;
+        
+
+        Args:
+            dim (int): the dimension of the basis.
+            domain (list[int], optional): the interval where the basis functions are defined. Defaults to [-1,1].
+            deg (int, optional): the degree of the B-spline basis. Defaults to 1.
+        &#34;&#34;&#34;
+        self.__dim = dim
+        self.__deg = deg
+        self.__domain = domain
+        knots = np.linspace(domain[0],domain[1],dim+1-deg)
+        self.__N=knots.size+deg-1
+        self.__deg=deg
+        self.__knots=np.hstack( ( np.ones(deg)*knots[0] , knots , np.ones(deg)*knots[-1] ) )
+        self.__spl = []
+        self.__dspl = []
+        for i in range(self.__N):
+            c=np.zeros(self.__N)
+            c[i]=1
+            self.__spl.append(BSpline(self.__knots,c,self.__deg))
+            self.__dspl.append(scipy.interpolate.splder( BSpline(self.__knots,c,self.__deg) ))
+        
+        self.__compact_support_bsp = np.zeros((self.__N,2))
+        for i in range(self.__N):
+            self.__compact_support_bsp[i,0] = self.__knots[i]
+            self.__compact_support_bsp[i,1] = self.__knots[i+self.__deg+1]
+            
+        int_bsp_bsp = np.zeros((self.__N,self.__N))
+        int_bsp = np.zeros((self.__N,1))
+        # int_bsp_v = np.zeros((self.___Nz,1))
+        
+        Pts, Ws =np.polynomial.legendre.leggauss(20)
+        for i in range(self.__N):
+            a=self.__compact_support_bsp[i,0]
+            b=self.__compact_support_bsp[i,1]
+
+            for k in range(self.__knots.size-1):
+                if self.__knots[k]&gt;=a and self.__knots[k+1]&lt;=b:
+                    pts = self.__knots[k]+(Pts+1)*0.5*(self.__knots[k+1]-self.__knots[k])
+                    ws = Ws*(self.__knots[k+1]-self.__knots[k])/2
+                    int_bsp[i,0] += np.sum( self.__call__(pts,i) * ws )
+                    
+            for j in range(i,self.__N):
+                a=self.__compact_support_bsp[j,0]
+                b=self.__compact_support_bsp[i,1]
+                if b&gt;a:
+                    for k in range(self.__knots.size-1):
+                        if self.__knots[k]&gt;=a and self.__knots[k+1]&lt;=b:
+                            pts = self.__knots[k]+(Pts+1)*0.5*(self.__knots[k+1]-self.__knots[k])
+                            ws = Ws*(self.__knots[k+1]-self.__knots[k])/2
+                            int_bsp_bsp[i,j] += np.sum(  self.__call__(pts,i) *self.__call__(pts,j) * ws )
+                            # int_bspp[i,j] += np.sum( self.___bspp(pts)[i,:]* self.bspp(pts)[j,:]*ws )
+                    if i!=j:
+                        int_bsp_bsp[j,i] = int_bsp_bsp[i,j]
+                        # int_bspp[j,i] = int_bspp[i,j]
+                    
+        
+        self.__int_bsp_bsp = int_bsp_bsp
+        # self.___int_bspp_bspp = int_bspp
+        self.__int_bsp = int_bsp
+        
+        
+    @property 
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+
+    @property
+    def mass(self):
+        return self.__int_bsp_bsp
+        
+    @property
+    def int(self):
+        return self.__int_bsp.flatten()
+
+    @property 
+    def stiff(self):
+        return None
+    
+    @property
+    def interpolation_pts(self):
+        xg = self.__greville().flatten()
+        yg = self(xg)
+        return xg, yg
+    
+    def __repr__(self):
+        return &#39;B-spline basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,i=None,derivative=False):
+        if i==None:
+            if derivative:
+                ret = np.array([self.__dspl[i](x) for i in range(self.__N)])
+                return ret
+            else:
+                ret = np.array([self.__spl[i](x) for i in range(self.__N)])
+                return ret
+        else:
+            if derivative:
+                 return self.__dspl[i](x)
+            else:
+                return self.__spl[i](x)
+                
+    def __greville(self):
+        return np.array([np.sum(self.__knots[i+1:i+self.__deg+1]) for i in range(self.__N)])/(self.__deg)
+        
+    def eval_all(self,c,x):
+        c=np.hstack((c,np.zeros(self.__deg-2)))
+        return BSpline(self.__knots,c,self.__deg)(x)
+    
+    
+
+    
+    def derivative(self):
+        bd = scipy.interpolate.splder(BSpline(self.__knots,np.zeros(self.__N+self.__deg-1)+1,self.__deg))
+        return BSplineBasis(np.unique(bd.t), bd.k)
+
+    
+    def integration_points(self,mult = 2):
+        pts = []
+        ws = []
+        
+        ku = np.unique(self.__knots)
+        for i in range(ku.size-1):
+            
+            p, w = points_weights(ku[i], ku[i+1], self.__deg*mult)
+            
+            pts += list(p)
+            ws += list(w)
+            
+        return np.array(pts), np.array(ws)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="TTCME.basis.UnivariateBasis" href="#TTCME.basis.UnivariateBasis">UnivariateBasis</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.basis.BSplineBasis.dim"><code class="name">var <span class="ident">dim</span></code></dt>
+<dd>
+<div class="desc"><p>Get the dimension of the basis instance.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the dimension.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property 
+def dim(self):
+    &#34;&#34;&#34;
+    Get the dimension of the basis instance.
+
+    Returns:
+        int: the dimension.
+    &#34;&#34;&#34;
+    return self.__dim</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.BSplineBasis.int"><code class="name">var <span class="ident">int</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def int(self):
+    return self.__int_bsp.flatten()</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.BSplineBasis.interpolation_pts"><code class="name">var <span class="ident">interpolation_pts</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def interpolation_pts(self):
+    xg = self.__greville().flatten()
+    yg = self(xg)
+    return xg, yg</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.BSplineBasis.mass"><code class="name">var <span class="ident">mass</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mass(self):
+    return self.__int_bsp_bsp</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.BSplineBasis.stiff"><code class="name">var <span class="ident">stiff</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property 
+def stiff(self):
+    return None</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.basis.BSplineBasis.derivative"><code class="name flex">
+<span>def <span class="ident">derivative</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def derivative(self):
+    bd = scipy.interpolate.splder(BSpline(self.__knots,np.zeros(self.__N+self.__deg-1)+1,self.__deg))
+    return BSplineBasis(np.unique(bd.t), bd.k)</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.BSplineBasis.eval_all"><code class="name flex">
+<span>def <span class="ident">eval_all</span></span>(<span>self, c, x)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def eval_all(self,c,x):
+    c=np.hstack((c,np.zeros(self.__deg-2)))
+    return BSpline(self.__knots,c,self.__deg)(x)</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.BSplineBasis.integration_points"><code class="name flex">
+<span>def <span class="ident">integration_points</span></span>(<span>self, mult=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def integration_points(self,mult = 2):
+    pts = []
+    ws = []
+    
+    ku = np.unique(self.__knots)
+    for i in range(ku.size-1):
+        
+        p, w = points_weights(ku[i], ku[i+1], self.__deg*mult)
+        
+        pts += list(p)
+        ws += list(w)
+        
+    return np.array(pts), np.array(ws)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="TTCME.basis.ChebyBasis"><code class="flex name class">
+<span>class <span class="ident">ChebyBasis</span></span>
+<span>(</span><span>dim, domain=[-1, 1])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChebyBasis(UnivariateBasis):
+    def __init__(self, dim, domain = [-1,1]):
+        self.__dim = dim
+        self.domain = domain
+        self.basis = [ np.polynomial.chebyshev.Chebyshev.basis(i,domain) for i in range(dim) ]
+        self.__stiff = np.zeros((dim,dim))
+        self.__mass = np.zeros((dim,dim))
+        self.__ints = np.zeros(dim)
+        
+        for i in range(dim):
+            pint = self.basis[i].integ()
+            self.__ints[i] = pint(domain[1]) - pint(domain[0])
+            for j in range(dim):
+                pint = (self.basis[i] * self.basis[j]).integ()
+                self.__mass[i,j] = pint(domain[1]) - pint(domain[0])
+                pint = (self.basis[i] * self.basis[j].deriv()).integ()
+                self.__stiff[i,j] = pint(domain[1]) - pint(domain[0])
+        
+    def __repr__(self):
+        return &#39;Chebyshev basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for b in self.basis:
+            result.append(b.deriv(deriv)(x))
+        return np.array(result)
+    
+    def get_integral(self):
+        return self.__ints
+    
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+        
+    @property
+    def stiff(self):
+        return self.__stiff
+    
+    @property
+    def mass(self):
+        return self.__mass
+    
+    def plot(self):
+        x = np.linspace(self.domain[0],self.domain[1],self.dim*32)
+        for b in self.basis:
+            matplotlib.pyplot.plot(x,b(x))
+            
+    def interpolate(self,fun):
+        
+        pts,ws = np.polynomial.legendre.leggauss(self.dim*4)
+        pts = 0.5 * (self.domain[1]-self.domain[0]) * (pts+1) + self.domain[0]
+        ws = (self.domain[1]-self.domain[0]) / 2  *ws
+        
+        vals = fun(pts)*ws
+        
+        b = np.sum(self(pts) * vals,1).reshape([-1,1])
+       
+        return np.linalg.solve(self.mass,b).flatten()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="TTCME.basis.UnivariateBasis" href="#TTCME.basis.UnivariateBasis">UnivariateBasis</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.basis.ChebyBasis.dim"><code class="name">var <span class="ident">dim</span></code></dt>
+<dd>
+<div class="desc"><p>Get the dimension of the basis instance.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the dimension.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dim(self):
+    &#34;&#34;&#34;
+    Get the dimension of the basis instance.
+
+    Returns:
+        int: the dimension.
+    &#34;&#34;&#34;
+    return self.__dim</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.ChebyBasis.mass"><code class="name">var <span class="ident">mass</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mass(self):
+    return self.__mass</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.ChebyBasis.stiff"><code class="name">var <span class="ident">stiff</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def stiff(self):
+    return self.__stiff</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.basis.ChebyBasis.get_integral"><code class="name flex">
+<span>def <span class="ident">get_integral</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_integral(self):
+    return self.__ints</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.ChebyBasis.interpolate"><code class="name flex">
+<span>def <span class="ident">interpolate</span></span>(<span>self, fun)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def interpolate(self,fun):
+    
+    pts,ws = np.polynomial.legendre.leggauss(self.dim*4)
+    pts = 0.5 * (self.domain[1]-self.domain[0]) * (pts+1) + self.domain[0]
+    ws = (self.domain[1]-self.domain[0]) / 2  *ws
+    
+    vals = fun(pts)*ws
+    
+    b = np.sum(self(pts) * vals,1).reshape([-1,1])
+   
+    return np.linalg.solve(self.mass,b).flatten()</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.ChebyBasis.plot"><code class="name flex">
+<span>def <span class="ident">plot</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot(self):
+    x = np.linspace(self.domain[0],self.domain[1],self.dim*32)
+    for b in self.basis:
+        matplotlib.pyplot.plot(x,b(x))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="TTCME.basis.DiracDeltaBase"><code class="flex name class">
+<span>class <span class="ident">DiracDeltaBase</span></span>
+<span>(</span><span>n, pts=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DiracDeltaBase(UnivariateBasis):
+    def __init__(self, n, pts = None):
+        self.__dim = n
+        if pts is None:
+            self.__pts = np.arange(n) 
+        else:
+            self.__pts = pts 
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for p in self.__pts:
+            result.append(1.0*(p == x))
+        return np.array(result)
+
+    def __repr__(self):
+        return &#39;Dirac-deltas basis defined on {&#39;+str(self.__pts[0])+&#39;, &#39;+str(self.__pts[-1])+&#39;} and dimension &#39;+str(self.__dim)
+
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+    
+    @property
+    def stiff(self):
+        pass
+    
+    @property
+    def int(self):
+        return np.ones((self.__dim,))
+        
+    @property
+    def mass(self):
+        return np.eye(self.__dim)
+
+    @property
+    def interpolation_pts(self):
+        return self.__pts, np.eye(self.__dim)
+
+    def integration_points(self,mult = 2):
+        return self.__pts, np.ones((self.__dim,))/self.__dim</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="TTCME.basis.UnivariateBasis" href="#TTCME.basis.UnivariateBasis">UnivariateBasis</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.basis.DiracDeltaBase.dim"><code class="name">var <span class="ident">dim</span></code></dt>
+<dd>
+<div class="desc"><p>Get the dimension of the basis instance.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the dimension.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dim(self):
+    &#34;&#34;&#34;
+    Get the dimension of the basis instance.
+
+    Returns:
+        int: the dimension.
+    &#34;&#34;&#34;
+    return self.__dim</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.DiracDeltaBase.int"><code class="name">var <span class="ident">int</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def int(self):
+    return np.ones((self.__dim,))</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.DiracDeltaBase.interpolation_pts"><code class="name">var <span class="ident">interpolation_pts</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def interpolation_pts(self):
+    return self.__pts, np.eye(self.__dim)</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.DiracDeltaBase.mass"><code class="name">var <span class="ident">mass</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mass(self):
+    return np.eye(self.__dim)</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.DiracDeltaBase.stiff"><code class="name">var <span class="ident">stiff</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def stiff(self):
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.basis.DiracDeltaBase.integration_points"><code class="name flex">
+<span>def <span class="ident">integration_points</span></span>(<span>self, mult=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def integration_points(self,mult = 2):
+    return self.__pts, np.ones((self.__dim,))/self.__dim</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="TTCME.basis.LagrangeBasis"><code class="flex name class">
+<span>class <span class="ident">LagrangeBasis</span></span>
+<span>(</span><span>knots, domain=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LagrangeBasis(UnivariateBasis):
+    def __init__(self, knots, domain = None):
+        self.__dim = len(knots)
+        if domain is None:
+            domain = (min(knots), max(knots))
+        
+        self.__domain = domain
+       
+        self.__pts = knots
+
+        self.__basis = [ scipy.interpolate.lagrange(self.__pts,np.eye(self.__dim)[:,i]) for i in range(self.__dim) ]
+      
+        self.__stiff = np.zeros((self.__dim, self.__dim))
+        self.__mass = np.zeros((self.__dim, self.__dim))
+        self.__ints = np.zeros(self.__dim)
+        
+        for i in range(self.__dim):
+            pint = self.__basis[i].integ()
+            self.__ints[i] = pint(domain[1]) - pint(domain[0])
+            for j in range(self.__dim):
+                pint = (self.__basis[i] * self.__basis[j]).integ()
+                self.__mass[i,j] = pint(domain[1]) - pint(domain[0])
+                pint = (self.__basis[i] * self.__basis[j].deriv()).integ()
+                self.__stiff[i,j] = pint(domain[1]) - pint(domain[0])
+
+    def __repr__(self):
+        return &#39;Lagrange basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for b in self.__basis:
+            result.append(b.deriv(deriv)(x))
+        return np.array(result)
+
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+    
+    @property
+    def stiff(self):
+        return self.__stiff
+    
+    @property
+    def int(self):
+        return self.__ints.flatten()
+    
+    @property
+    def mass(self):
+        return self.__mass
+
+    @property
+    def interpolation_pts(self):
+        return self.__pts, np.eye(self.__dim)
+
+    def integration_points(self,mult = 2):
+        return points_weights(self.domain[0], self.domain[1], self.deg*mult)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="TTCME.basis.UnivariateBasis" href="#TTCME.basis.UnivariateBasis">UnivariateBasis</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.basis.LagrangeBasis.dim"><code class="name">var <span class="ident">dim</span></code></dt>
+<dd>
+<div class="desc"><p>Get the dimension of the basis instance.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the dimension.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dim(self):
+    &#34;&#34;&#34;
+    Get the dimension of the basis instance.
+
+    Returns:
+        int: the dimension.
+    &#34;&#34;&#34;
+    return self.__dim</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LagrangeBasis.int"><code class="name">var <span class="ident">int</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def int(self):
+    return self.__ints.flatten()</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LagrangeBasis.interpolation_pts"><code class="name">var <span class="ident">interpolation_pts</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def interpolation_pts(self):
+    return self.__pts, np.eye(self.__dim)</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LagrangeBasis.mass"><code class="name">var <span class="ident">mass</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mass(self):
+    return self.__mass</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LagrangeBasis.stiff"><code class="name">var <span class="ident">stiff</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def stiff(self):
+    return self.__stiff</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.basis.LagrangeBasis.integration_points"><code class="name flex">
+<span>def <span class="ident">integration_points</span></span>(<span>self, mult=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def integration_points(self,mult = 2):
+    return points_weights(self.domain[0], self.domain[1], self.deg*mult)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="TTCME.basis.LegendreBasis"><code class="flex name class">
+<span>class <span class="ident">LegendreBasis</span></span>
+<span>(</span><span>dim, domain=[-1, 1])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LegendreBasis(UnivariateBasis):
+    def __init__(self, dim, domain = [-1,1]):
+        self.__dim = dim
+        self.__domain = domain
+        self.__basis = [ np.polynomial.legendre.Legendre.basis(i,domain) for i in range(dim) ]
+        self.__stiff = np.zeros((dim,dim))
+        self.__mass = np.zeros((dim,dim))
+        self.__ints = np.zeros(dim)
+        
+
+        for i in range(dim):
+            pint = self.__basis[i].integ()
+            self.__ints[i] = pint(domain[1]) - pint(domain[0])
+            for j in range(dim):
+                pint = (self.__basis[i] * self.__basis[j]).integ()
+                self.__mass[i,j] = pint(domain[1]) - pint(domain[0])
+                pint = (self.__basis[i] * self.__basis[j].deriv()).integ()
+                self.__stiff[i,j] = pint(domain[1]) - pint(domain[0])
+                
+                # pint = (self.basis[i] * self.basis[j].deriv()).integ()
+                # self.stiff[i,j] = pint(domain[1]) - pint(domain[0])
+                
+                
+                
+    @property
+    def dim(self):
+        &#34;&#34;&#34;
+        Get the dimension of the basis instance.
+
+        Returns:
+            int: the dimension.
+        &#34;&#34;&#34;
+        return self.__dim
+
+    @property
+    def int(self):
+        &#34;&#34;&#34;
+        Return 
+
+        Returns:
+            _type_: _description_
+        &#34;&#34;&#34;
+        return self.__ints
+
+    def __repr__(self):
+        return &#39;Legendre basis defined on [&#39;+str(self.__domain[0])+&#39;, &#39;+str(self.__domain[1])+&#39;] and dimension &#39;+str(self.__dim)
+
+    def __call__(self,x,deriv = 0):
+        result = []
+        for b in self.__basis:
+            result.append(b.deriv(deriv)(x))
+        return np.array(result)
+    
+    def get_integral(self):
+        return self.__ints
+    
+    def get_dimension(self):
+        return self.__dim
+    
+    @property
+    def stiff(self):
+        return self.__stiff
+    
+    @property
+    def mass(self):
+        return self.__mass
+
+
+    
+    
+    def interpolate(self,fun):
+        
+        pts,ws = np.polynomial.legendre.leggauss(self.__dim*4)
+        pts = 0.5 * (self.domain[1]-self.domain[0]) * (pts+1) + self.domain[0]
+        ws = (self.domain[1]-self.domain[0]) / 2  *ws
+        
+        vals = fun(pts)*ws
+        
+        b = np.sum(self(pts) * vals,1).reshape([-1,1])
+       
+        return np.linalg.solve(self.mass,b).flatten()
+       
+    def integration_points(self,mult = 3):
+        
+            
+        p, w = points_weights(self.__domain[0],self.__domain[1], self.__dim*mult)
+        
+        return p, w</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="TTCME.basis.UnivariateBasis" href="#TTCME.basis.UnivariateBasis">UnivariateBasis</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="TTCME.basis.LegendreBasis.dim"><code class="name">var <span class="ident">dim</span></code></dt>
+<dd>
+<div class="desc"><p>Get the dimension of the basis instance.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the dimension.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dim(self):
+    &#34;&#34;&#34;
+    Get the dimension of the basis instance.
+
+    Returns:
+        int: the dimension.
+    &#34;&#34;&#34;
+    return self.__dim</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LegendreBasis.int"><code class="name">var <span class="ident">int</span></code></dt>
+<dd>
+<div class="desc"><p>Return </p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>_type_</code></dt>
+<dd><em>description</em></dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def int(self):
+    &#34;&#34;&#34;
+    Return 
+
+    Returns:
+        _type_: _description_
+    &#34;&#34;&#34;
+    return self.__ints</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LegendreBasis.mass"><code class="name">var <span class="ident">mass</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mass(self):
+    return self.__mass</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LegendreBasis.stiff"><code class="name">var <span class="ident">stiff</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def stiff(self):
+    return self.__stiff</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="TTCME.basis.LegendreBasis.get_dimension"><code class="name flex">
+<span>def <span class="ident">get_dimension</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_dimension(self):
+    return self.__dim</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LegendreBasis.get_integral"><code class="name flex">
+<span>def <span class="ident">get_integral</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_integral(self):
+    return self.__ints</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LegendreBasis.integration_points"><code class="name flex">
+<span>def <span class="ident">integration_points</span></span>(<span>self, mult=3)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def integration_points(self,mult = 3):
+    
+        
+    p, w = points_weights(self.__domain[0],self.__domain[1], self.__dim*mult)
+    
+    return p, w</code></pre>
+</details>
+</dd>
+<dt id="TTCME.basis.LegendreBasis.interpolate"><code class="name flex">
+<span>def <span class="ident">interpolate</span></span>(<span>self, fun)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def interpolate(self,fun):
+    
+    pts,ws = np.polynomial.legendre.leggauss(self.__dim*4)
+    pts = 0.5 * (self.domain[1]-self.domain[0]) * (pts+1) + self.domain[0]
+    ws = (self.domain[1]-self.domain[0]) / 2  *ws
+    
+    vals = fun(pts)*ws
+    
+    b = np.sum(self(pts) * vals,1).reshape([-1,1])
+   
+    return np.linalg.solve(self.mass,b).flatten()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="TTCME.basis.UnivariateBasis"><code class="flex name class">
+<span>class <span class="ident">UnivariateBasis</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UnivariateBasis():
+    pass</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="TTCME.basis.BSplineBasis" href="#TTCME.basis.BSplineBasis">BSplineBasis</a></li>
+<li><a title="TTCME.basis.ChebyBasis" href="#TTCME.basis.ChebyBasis">ChebyBasis</a></li>
+<li><a title="TTCME.basis.DiracDeltaBase" href="#TTCME.basis.DiracDeltaBase">DiracDeltaBase</a></li>
+<li><a title="TTCME.basis.LagrangeBasis" href="#TTCME.basis.LagrangeBasis">LagrangeBasis</a></li>
+<li><a title="TTCME.basis.LegendreBasis" href="#TTCME.basis.LegendreBasis">LegendreBasis</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="TTCME" href="index.html">TTCME</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="TTCME.basis.points_weights" href="#TTCME.basis.points_weights">points_weights</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="TTCME.basis.BSplineBasis" href="#TTCME.basis.BSplineBasis">BSplineBasis</a></code></h4>
+<ul class="two-column">
+<li><code><a title="TTCME.basis.BSplineBasis.derivative" href="#TTCME.basis.BSplineBasis.derivative">derivative</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.dim" href="#TTCME.basis.BSplineBasis.dim">dim</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.eval_all" href="#TTCME.basis.BSplineBasis.eval_all">eval_all</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.int" href="#TTCME.basis.BSplineBasis.int">int</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.integration_points" href="#TTCME.basis.BSplineBasis.integration_points">integration_points</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.interpolation_pts" href="#TTCME.basis.BSplineBasis.interpolation_pts">interpolation_pts</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.mass" href="#TTCME.basis.BSplineBasis.mass">mass</a></code></li>
+<li><code><a title="TTCME.basis.BSplineBasis.stiff" href="#TTCME.basis.BSplineBasis.stiff">stiff</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="TTCME.basis.ChebyBasis" href="#TTCME.basis.ChebyBasis">ChebyBasis</a></code></h4>
+<ul class="two-column">
+<li><code><a title="TTCME.basis.ChebyBasis.dim" href="#TTCME.basis.ChebyBasis.dim">dim</a></code></li>
+<li><code><a title="TTCME.basis.ChebyBasis.get_integral" href="#TTCME.basis.ChebyBasis.get_integral">get_integral</a></code></li>
+<li><code><a title="TTCME.basis.ChebyBasis.interpolate" href="#TTCME.basis.ChebyBasis.interpolate">interpolate</a></code></li>
+<li><code><a title="TTCME.basis.ChebyBasis.mass" href="#TTCME.basis.ChebyBasis.mass">mass</a></code></li>
+<li><code><a title="TTCME.basis.ChebyBasis.plot" href="#TTCME.basis.ChebyBasis.plot">plot</a></code></li>
+<li><code><a title="TTCME.basis.ChebyBasis.stiff" href="#TTCME.basis.ChebyBasis.stiff">stiff</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="TTCME.basis.DiracDeltaBase" href="#TTCME.basis.DiracDeltaBase">DiracDeltaBase</a></code></h4>
+<ul class="two-column">
+<li><code><a title="TTCME.basis.DiracDeltaBase.dim" href="#TTCME.basis.DiracDeltaBase.dim">dim</a></code></li>
+<li><code><a title="TTCME.basis.DiracDeltaBase.int" href="#TTCME.basis.DiracDeltaBase.int">int</a></code></li>
+<li><code><a title="TTCME.basis.DiracDeltaBase.integration_points" href="#TTCME.basis.DiracDeltaBase.integration_points">integration_points</a></code></li>
+<li><code><a title="TTCME.basis.DiracDeltaBase.interpolation_pts" href="#TTCME.basis.DiracDeltaBase.interpolation_pts">interpolation_pts</a></code></li>
+<li><code><a title="TTCME.basis.DiracDeltaBase.mass" href="#TTCME.basis.DiracDeltaBase.mass">mass</a></code></li>
+<li><code><a title="TTCME.basis.DiracDeltaBase.stiff" href="#TTCME.basis.DiracDeltaBase.stiff">stiff</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="TTCME.basis.LagrangeBasis" href="#TTCME.basis.LagrangeBasis">LagrangeBasis</a></code></h4>
+<ul class="two-column">
+<li><code><a title="TTCME.basis.LagrangeBasis.dim" href="#TTCME.basis.LagrangeBasis.dim">dim</a></code></li>
+<li><code><a title="TTCME.basis.LagrangeBasis.int" href="#TTCME.basis.LagrangeBasis.int">int</a></code></li>
+<li><code><a title="TTCME.basis.LagrangeBasis.integration_points" href="#TTCME.basis.LagrangeBasis.integration_points">integration_points</a></code></li>
+<li><code><a title="TTCME.basis.LagrangeBasis.interpolation_pts" href="#TTCME.basis.LagrangeBasis.interpolation_pts">interpolation_pts</a></code></li>
+<li><code><a title="TTCME.basis.LagrangeBasis.mass" href="#TTCME.basis.LagrangeBasis.mass">mass</a></code></li>
+<li><code><a title="TTCME.basis.LagrangeBasis.stiff" href="#TTCME.basis.LagrangeBasis.stiff">stiff</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="TTCME.basis.LegendreBasis" href="#TTCME.basis.LegendreBasis">LegendreBasis</a></code></h4>
+<ul class="two-column">
+<li><code><a title="TTCME.basis.LegendreBasis.dim" href="#TTCME.basis.LegendreBasis.dim">dim</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.get_dimension" href="#TTCME.basis.LegendreBasis.get_dimension">get_dimension</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.get_integral" href="#TTCME.basis.LegendreBasis.get_integral">get_integral</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.int" href="#TTCME.basis.LegendreBasis.int">int</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.integration_points" href="#TTCME.basis.LegendreBasis.integration_points">integration_points</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.interpolate" href="#TTCME.basis.LegendreBasis.interpolate">interpolate</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.mass" href="#TTCME.basis.LegendreBasis.mass">mass</a></code></li>
+<li><code><a title="TTCME.basis.LegendreBasis.stiff" href="#TTCME.basis.LegendreBasis.stiff">stiff</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="TTCME.basis.UnivariateBasis" href="#TTCME.basis.UnivariateBasis">UnivariateBasis</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

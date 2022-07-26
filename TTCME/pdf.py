@@ -1,17 +1,23 @@
+"""
+This contains the basic probability density function `pdfTT` represented using tensor product basis and TT DoFs.
+
+"""
 import torchtt as tntt
 import torch as tn
+import torch
 import numpy as np
-from .basis import BSplineBasis, LagrangeBasis, LegendreBasis, ChebyBasis, DiracDeltaBase
+from .basis import BSplineBasis, LagrangeBasis, LegendreBasis, ChebyBasis, DiracDeltaBase, UnivariateBasis
 import copy
+import TTCME
 
 def GammaPDF(alphas, betas, basis, variable_names = []):
     """
     Compute the PDF for multivariate distribution of independent gammas. 
 
     Args:
-        alphas (_type_): _description_
-        betas (_type_): _description_
-        basis (_type_): _description_
+        alphas (numpy.array): the alphas of the distribution.
+        betas (numpy.array): the betas of the distribution. 
+        basis (list[TTCME.basis.UnivariateBasis]): list of the bases.
         variable_names (list[str], optional): the variable names. Defaults to [].
 
     Returns:
@@ -29,7 +35,17 @@ def GammaPDF(alphas, betas, basis, variable_names = []):
     return pdf
 
 def UniformPDF( basis, variable_names = []):
+    """
+    Compute the PDF for multivariate uniform RVs. 
 
+    Args:
+        basis (list[TTCME.basis.UnivariateBasis]): list of the bases.
+        variable_names (list[str], optional): the variable names. Defaults to [].
+
+    Returns:
+        pdfTT: the PDF instance.
+    """
+    
     pdf = pdfTT(basis, variable_names = variable_names)
     # print(basis.interpolate(lambda x : x**(alpha-1) * np.exp(-beta*x)))
     tts = []
@@ -50,7 +66,18 @@ def SingularPMF(N,I, variable_names = []):
     return pdfTT(basis, [], variable_names, [], dofs)
     
 def BetaPdfTT(N : list[int], alphas: list[float], betas: list[float]):
+    """
+    Compute the PDF for independent beta distributed RVs. 
 
+    Args:
+        N (list[int]): the size of the univariate bases.
+        alphas (list[float]): list of the values of alpha.
+        betas (list[float]): list of values of beta.
+
+    Returns:
+        pdfTT: the pdf instance.
+    """
+    
     basis = [BSplineBasis(n,[0,1],2) for n in N]
     vects = []
     pdf_g = lambda x,alpha,beta: x**(alpha-1)*(1-x)**(beta-1)
@@ -65,11 +92,33 @@ def BetaPdfTT(N : list[int], alphas: list[float], betas: list[float]):
 class LogNormalObservation:
 
     def __init__(self, N, sigmas):
+        """
+        Implements the Gaussian observation operator class for the CME:
+
+        $$ p(\mathbf{y} | \mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
+        
+        Args:
+            N (list[int]): the state truncation.
+            sigmas (list[float]): the variances of the independent Gaussians.
+        """
         self.__N = N
         self.__sigmas = sigmas
         
     def likelihood(self, observation):
+        """
+        Computes the likelihood given an observation and returns it a a tensor in the TT format.
+        The returned tensor is
+        
+        $$ \mathsf{p}^{(\\text{obs})}_{i_1...i_d} = p(\\mathbf{y} | \\mathbf{x} = (i_1,...,i_d) ),$$ 
+        
+        where \( \\mathbf{y} \) is the given observation.
 
+        Args:
+            observation (numpy.array): the observation vector.
+
+        Returns:
+            torchtt.TT: the likelihood.
+        """
         noise_model = lambda x,y,s : 1/(y*s*np.sqrt(2*np.pi)) * np.exp(-(np.log(y)-np.log(x+1))**2/(2*s**2))
 
         tens = tntt.rank1TT([tn.tensor(noise_model(np.arange(self.__N[i]),observation[i],self.__sigmas[i])) for i in range(len(self.__N))])
@@ -78,6 +127,16 @@ class LogNormalObservation:
 
     @staticmethod
     def add_noise(sample, sigmas):
+        """
+        Adds noise to the given sample according to the pdf.
+
+        Args:
+            sample (np.array): m x d array containing the number of eact species at disrete time steps. d is the number of species and m is the number of observations.
+            sigmas (list[float]): the sigmas of the normal random number generator.
+
+        Returns:
+            np.array: the resulting sample with noise.
+        """
         lst = [ np.random.lognormal(np.log(sample[:,i]+1),sigmas[i]).reshape([-1,1]) for i in range(len(sigmas)) ]
         
         sample = np.hstack(tuple(lst))
@@ -88,8 +147,10 @@ class GaussianObservation:
 
     def __init__(self, N, sigmas):
         """
-        
+        Implements the Gaussian observation operator class for the CME:
 
+        $$ p(\mathbf{y} | \mathbf{x}) \sim \prod\limits_{k=1}^d \exp(-\\frac{1}{2}\\frac{(y_k-x_k)^2}{\sigma_k^2})$$
+        
         Args:
             N (list[int]): the state truncation.
             sigmas (list[float]): the variances of the independent Gaussians.
@@ -99,10 +160,15 @@ class GaussianObservation:
         
     def likelihood(self, observation):
         """
-        Computes the likelihood given an observation
+        Computes the likelihood given an observation and returns it a a tensor in the TT format.
+        The returned tensor is
+        
+        $$ \mathsf{p}^{(\\text{obs})}_{i_1...i_d} = p(\\mathbf{y} | \\mathbf{x} = (i_1,...,i_d) ),$$ 
+        
+        where \( \\mathbf{y} \) is the given observation.
 
         Args:
-            observation (numpy.array): observation.
+            observation (numpy.array): the observation vector.
 
         Returns:
             torchtt.TT: the likelihood.
@@ -116,7 +182,7 @@ class GaussianObservation:
     @staticmethod
     def add_noise(sample, sigmas ):
         """
-        Adds noise to the given sample.
+        Adds noise to the given sample accordinf to the pdf.
 
         Args:
             sample (np.array): m x d array containing the number of eact species at disrete time steps. d is the number of species and m is the number of observations.
@@ -151,10 +217,8 @@ class pdfTT():
 
     @property
     def basis(self):
-        """_summary_
+        """
 
-        Returns:
-            _type_: _description_
         """
         return self.__basis.copy()
 
@@ -186,6 +250,29 @@ class pdfTT():
         
     @classmethod
     def interpoalte(cls, pdf, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], eps = 1e-10):
+        """
+        Interpolate a pdf using the given basis.
+        
+        Example:
+            ```
+            import TTCME
+            basis = [TTCME.basis.BSplineBasis(64,[0,1],2), TTCME.basis.BSplineBasis(64,[0,1],2)]
+            basis_cond = [TTCME.basis.BSplineBasis(32,[2,3],2), TTCME.basis.BSplineBasis(43,[2, 3],2)]
+            pdf_c = TTCME.pdf.pdfTT.interpoalte(pdf = lambda x: x[...,0]**(2-1)*(1-x[...,0])**(x[...,2]-1) * x[...,1]**(2-1)*(1-x[...,1])**(x[...,3]-1), basis = basis, basis_conditioned= basis_cond, variable_names=['x1','x2'], conditioned_variable_names=['beta1','beta2'] )
+            ```
+        
+
+        Args:
+            pdf (_type_): _description_
+            basis (_type_): _description_
+            basis_conditioned (list, optional): _description_. Defaults to [].
+            variable_names (list, optional): _description_. Defaults to [].
+            conditioned_variable_names (list, optional): _description_. Defaults to [].
+            eps (_type_, optional): _description_. Defaults to 1e-10.
+
+        Returns:
+            _type_: _description_
+        """
         xs = tntt.meshgrid([tn.tensor(b.interpolation_pts[0]) for b in basis]+[tn.tensor(b.interpolation_pts[0]) for b in basis_conditioned])
         Ms = tntt.rank1TT([tn.tensor(np.linalg.inv(b.interpolation_pts[1])) for b in basis]+[tn.tensor(np.linalg.inv(b.interpolation_pts[1])) for b in basis_conditioned])
         dofs = Ms @  tntt.interpolate.function_interpolate(pdf, xs, eps=eps)
@@ -235,7 +322,7 @@ class pdfTT():
         Computes the normalization constant. No normalization is performed.
 
         Returns:
-            _type_: the normalization constant. In case of conditioned RVs, a `torchtt.TT` instance is returned.
+            Union[torchtt.TT,float]: the normalization constant. In case of conditioned RVs, a `torchtt.TT` instance is returned.
         """
         int_tt = tntt.rank1TT([tn.tensor(b.int) for b in self.__basis ])
 
@@ -250,10 +337,11 @@ class pdfTT():
 
 
     def expected_value(self):
-        """_summary_
+        """
+        Compute the expected value
 
         Returns:
-            _type_: _description_
+            Union[list[torchtt.TT],list[float]]: _description_
         """
         E = []
         for i in range(self.__d):
@@ -270,15 +358,13 @@ class pdfTT():
         return E
     
     def covariance_matrix(self):
-        '''
-        Compute the expected value of the pdf.
-
-        Returns
-        -------
-        E : np array
-            the expected value.
-
-        '''
+        """
+        Compute the covariance matrix.
+        Currently no conditioned RVs are accepted!!!
+        
+        Returns:
+            torch.tensor: the covariance matrix.
+        """
         C = tn.zeros((self.__d,self.__d))
         E = self.expected_value()
         
@@ -311,6 +397,14 @@ class pdfTT():
      
     
     def round(self,eps=1e-12,rmax=9999):
+        """
+        Round the TT degrees of freedom.
+        
+
+        Args:
+            eps (float, optional): the epsilon accuracy. Defaults to 1e-12.
+            rmax (int, optional): the maximum rank. Defaults to 9999.
+        """
         self.__tt = self.__tt.round(eps,rmax)
     
     def __call__(self,x):

@@ -3,9 +3,10 @@ import torchtt as tntt
 import numpy as np
 import math
 import scipy.sparse as sps
-from .ssa import GillespieMultiple, Gillespie, Observations_grid
+from ._ssa import GillespieMultiple, Gillespie, Observations_grid
 
 class ChemicalReaction:
+
     def __init__(self, species, formula, constant, decomposable_propensity=[], params = []):
 
         self.__species = species.copy()
@@ -54,11 +55,19 @@ class ChemicalReaction:
                 self.__propensities.append(prop(self.__pre[k]))
 
     def __repr__(self):
+        """
+
+        Returns:
+            str: _description_
+        """
         s = 'Chemical reaction: '+self.__formula + ' with parameters: '+str(self.__params) 
         return s
 
     @property
     def pre(self):
+        """
+        
+        """
         return self.__pre.copy()
 
     @property
@@ -194,7 +203,14 @@ class ChemicalReaction:
 class ReactionSystem:
 
     def __init__(self, species, reactions, params = []):
+        """
+        Reactio system class. 
 
+        Args:
+            species (list[str]): the names of the species.
+            reactions (list[ChemicalReaction]): _description_
+            params (list, optional): _description_. Defaults to [].
+        """
         self.__species = species.copy()
         self.__reactions = reactions.copy()
         self.__d = len(species)
@@ -203,10 +219,18 @@ class ReactionSystem:
 
     @property
     def reactions(self):
+        """
+        list[ChemicalReaction]: the reactions.
+        """
         return self.__reactions
 
     def __repr__(self):
+        """
+        Represent the instance as a string.
 
+        Returns:
+            str: the representation.
+        """
         s =  "Chemical reaction system\nSpecies involved: "+",".join(self.__species)
         s += "\nReactions:\n" + "\n".join([ str(r) for r in self.__reactions]) 
         return s
@@ -215,6 +239,12 @@ class ReactionSystem:
         pass
 
     def add_reaction(self, reaction):
+        """
+        Add a chemical reaction to the system.
+
+        Args:
+            reaction (ChemicalReaction): the reaction to be added.
+        """
         self.__reactions.append(reaction)
 
     def generator_TT_parameters(self, N, params = [], eps = 1e-14):
@@ -326,7 +356,20 @@ class ReactionSystem:
         return Stt, Mtt, Mtt_inv
     
     def generator_sparse(self, N, params = None):
+        """
+        Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+        
 
+        Args:
+            N (list[int]): the trucnatikn of the CME in every direction.
+            params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+        Raises:
+            Exception: _description_Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            scipy.sparse.csr_matrix: the generator in sparse format.
+        """
         num_r = len(self.__reactions)
 
         Gen = None
