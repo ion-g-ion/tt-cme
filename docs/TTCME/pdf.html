@@ -125,7 +125,7 @@ class LogNormalObservation:
         &#34;&#34;&#34;
         Implements the Gaussian observation operator class for the CME:
 
-        $$ p(\mathbf{y} | \mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
+        $$ p(\\mathbf{y} | \\mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
         
         Args:
             N (list[int]): the state truncation.
@@ -226,7 +226,16 @@ class GaussianObservation:
 
 class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
+        &#34;&#34;&#34;
         
+
+        Args:
+            basis (_type_): _description_
+            basis_conditioned (list, optional): _description_. Defaults to [].
+            variable_names (list, optional): _description_. Defaults to [].
+            conditioned_variable_names (list, optional): _description_. Defaults to [].
+            dofs (_type_, optional): _description_. Defaults to None.
+        &#34;&#34;&#34;
         self.__d = len(basis)
         self.__dc = len(basis_conditioned) 
         self.__variable_names = variable_names
@@ -414,7 +423,16 @@ class pdfTT():
         return C
     
     def marginal(self,mask):
+        &#34;&#34;&#34;
+        Compute the marginal w.r.t. dimensions given as the mask.
+        Currently does not work for conditioned RVs.
         
+        Args:
+            mask (list[int]): the dimensions. The dimensions are numbered from 0.
+
+        Returns:
+            pdfTT: the resultimg pdf.
+        &#34;&#34;&#34;
         ints = [tn.tensor(self.basis[k].int) if k in mask else tn.ones([self.basis[k].dim]) for k in range(self.__d)]
         
         basis_new = [self.__basis[k] for k in range(self.__d) if not k in mask]
@@ -841,7 +859,7 @@ The returned tensor is</p>
         &#34;&#34;&#34;
         Implements the Gaussian observation operator class for the CME:
 
-        $$ p(\mathbf{y} | \mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
+        $$ p(\\mathbf{y} | \\mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
         
         Args:
             N (list[int]): the state truncation.
@@ -985,14 +1003,35 @@ The returned tensor is</p>
 <span>(</span><span>basis, basis_conditioned=[], variable_names=[], conditioned_variable_names=[], dofs=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>basis</code></strong> :&ensp;<code>_type_</code></dt>
+<dd><em>description</em></dd>
+<dt><strong><code>basis_conditioned</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd><em>description</em>. Defaults to [].</dd>
+<dt><strong><code>variable_names</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd><em>description</em>. Defaults to [].</dd>
+<dt><strong><code>conditioned_variable_names</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd><em>description</em>. Defaults to [].</dd>
+<dt><strong><code>dofs</code></strong> :&ensp;<code>_type_</code>, optional</dt>
+<dd><em>description</em>. Defaults to None.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
+        &#34;&#34;&#34;
         
+
+        Args:
+            basis (_type_): _description_
+            basis_conditioned (list, optional): _description_. Defaults to [].
+            variable_names (list, optional): _description_. Defaults to [].
+            conditioned_variable_names (list, optional): _description_. Defaults to [].
+            dofs (_type_, optional): _description_. Defaults to None.
+        &#34;&#34;&#34;
         self.__d = len(basis)
         self.__dc = len(basis_conditioned) 
         self.__variable_names = variable_names
@@ -1180,7 +1219,16 @@ The returned tensor is</p>
         return C
     
     def marginal(self,mask):
+        &#34;&#34;&#34;
+        Compute the marginal w.r.t. dimensions given as the mask.
+        Currently does not work for conditioned RVs.
         
+        Args:
+            mask (list[int]): the dimensions. The dimensions are numbered from 0.
+
+        Returns:
+            pdfTT: the resultimg pdf.
+        &#34;&#34;&#34;
         ints = [tn.tensor(self.basis[k].int) if k in mask else tn.ones([self.basis[k].dim]) for k in range(self.__d)]
         
         basis_new = [self.__basis[k] for k in range(self.__d) if not k in mask]
@@ -1520,13 +1568,33 @@ Currently no conditioned RVs are accepted!!!</p>
 <span>def <span class="ident">marginal</span></span>(<span>self, mask)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Compute the marginal w.r.t. dimensions given as the mask.
+Currently does not work for conditioned RVs.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mask</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the dimensions. The dimensions are numbered from 0.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="TTCME.pdf.pdfTT" href="#TTCME.pdf.pdfTT">pdfTT</a></code></dt>
+<dd>the resultimg pdf.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def marginal(self,mask):
+    &#34;&#34;&#34;
+    Compute the marginal w.r.t. dimensions given as the mask.
+    Currently does not work for conditioned RVs.
     
+    Args:
+        mask (list[int]): the dimensions. The dimensions are numbered from 0.
+
+    Returns:
+        pdfTT: the resultimg pdf.
+    &#34;&#34;&#34;
     ints = [tn.tensor(self.basis[k].int) if k in mask else tn.ones([self.basis[k].dim]) for k in range(self.__d)]
     
     basis_new = [self.__basis[k] for k in range(self.__d) if not k in mask]

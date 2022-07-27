@@ -95,7 +95,7 @@ class LogNormalObservation:
         """
         Implements the Gaussian observation operator class for the CME:
 
-        $$ p(\mathbf{y} | \mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
+        $$ p(\\mathbf{y} | \\mathbf{x}) \sim \prod\limits_{k=1}^d \\frac{1}{y_k \sigma_k \sqrt{2 \pi}} \exp(-\\frac{1}{2}\\frac{(\log{y_k}-\log{(x_k+1)})^2}{\sigma_k^2})$$
         
         Args:
             N (list[int]): the state truncation.
@@ -196,7 +196,16 @@ class GaussianObservation:
 
 class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
+        """
         
+
+        Args:
+            basis (_type_): _description_
+            basis_conditioned (list, optional): _description_. Defaults to [].
+            variable_names (list, optional): _description_. Defaults to [].
+            conditioned_variable_names (list, optional): _description_. Defaults to [].
+            dofs (_type_, optional): _description_. Defaults to None.
+        """
         self.__d = len(basis)
         self.__dc = len(basis_conditioned) 
         self.__variable_names = variable_names
@@ -384,7 +393,16 @@ class pdfTT():
         return C
     
     def marginal(self,mask):
+        """
+        Compute the marginal w.r.t. dimensions given as the mask.
+        Currently does not work for conditioned RVs.
         
+        Args:
+            mask (list[int]): the dimensions. The dimensions are numbered from 0.
+
+        Returns:
+            pdfTT: the resultimg pdf.
+        """
         ints = [tn.tensor(self.basis[k].int) if k in mask else tn.ones([self.basis[k].dim]) for k in range(self.__d)]
         
         basis_new = [self.__basis[k] for k in range(self.__d) if not k in mask]

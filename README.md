@@ -26,7 +26,8 @@ pip install git+https://github.com/ion-g-ion/tt-cme
 
 In the [examples](./examples/) folder a couple of examples are presented. 
 
-* 
+* [simple_gene_param_inference.ipynb](./examples/simple_gene_param_inference.ipynb) the parameter inference for the simple gene expression model.
+* [SEIQR_param_inference.ipynb](./examples/SEIQR_param_inference.ipynb) the parameter inference for the SEIQR model.
 
 The documentation is generated using `pdoc3` with:
 

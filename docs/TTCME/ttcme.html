@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>TTCME.ttcme API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="This module implements the `ChemicalReaction` class as well as the `ReactionSystem` class." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,11 +23,15 @@
 <h1 class="title">Module <code>TTCME.ttcme</code></h1>
 </header>
 <section id="section-intro">
+<p>This module implements the <code><a title="TTCME.ttcme.ChemicalReaction" href="#TTCME.ttcme.ChemicalReaction">ChemicalReaction</a></code> class as well as the <code><a title="TTCME.ttcme.ReactionSystem" href="#TTCME.ttcme.ReactionSystem">ReactionSystem</a></code> class.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import torch as tn 
+<pre><code class="python">&#34;&#34;&#34;
+This module implements the `ChemicalReaction` class as well as the `ReactionSystem` class.
+&#34;&#34;&#34;
+import torch as tn 
 import torchtt as tntt
 import numpy as np
 import math
@@ -37,7 +41,32 @@ from ._ssa import GillespieMultiple, Gillespie, Observations_grid
 class ChemicalReaction:
 
     def __init__(self, species, formula, constant, decomposable_propensity=[], params = []):
+        &#34;&#34;&#34;
+        Chemical reaction class.
+       
+        The laels of the species are soecified as a list of strings and the formula is given as a string in the way you would write it on paper (some examples are given below). 
+        The reaction can have paraneter dependencies. The parameter names must be provided in a separate list as strings and must be passed to the propensities (even if propensity does not depend on them) in the oreder given in the list. 
+        The parameters can be part of the propensity function or the reaction rate.
+        Custom propensity functions can be give. However, they must be decomposable in the sense \( \\alpha(\\mathbf{x}, p_1,...,p_n) = f_1(x_1,p_1,...,p_n) f_2(x_2,p_1,...,p_n) \cdots f_d(x_d,p_1,...,p_d) \), where \( p_k \) are the parameters.
+        The  functions \(f_k\) are provided as function handles in the `decomposable_propensity` list.
+        If no propensity is provided, the propensity is infered from the reaction formula.
+        
+        Example:
+        
+            * Formula examples:
+                - `&#34;A+B-&gt;&#34;`  one copy from species A and one copy from B result in nothing
+                - `&#34;A+2*B-&gt;C&#34;` one copy of A and 2 copies of B result in one C
+                - `&#34;-&gt;A&#34;`  one copy of A comes out of nothing.
+                            
+            * Propensity examples:
 
+        Args:
+            species (list[str]): the list of species labels.
+            formula (str): the formula (must contain labels that are in the species list)
+            constant (Union[str, float]): the reaction rate. If string is provided, the rate is a parameter dependent (name has to be provided in ithe params list). 
+            decomposable_propensity (list[Callable], optional): _description_. Defaults to [].
+            params (list[str], optional): the list of parameter names given as strings. Defaults to [].
+        &#34;&#34;&#34;
         self.__species = species.copy()
         self.__formula = formula
         self.__params = params.copy()
@@ -85,9 +114,10 @@ class ChemicalReaction:
 
     def __repr__(self):
         &#34;&#34;&#34;
-
+        Represent the instance as a string.
+        
         Returns:
-            str: _description_
+            str: the string representation.
         &#34;&#34;&#34;
         s = &#39;Chemical reaction: &#39;+self.__formula + &#39; with parameters: &#39;+str(self.__params) 
         return s
@@ -95,36 +125,52 @@ class ChemicalReaction:
     @property
     def pre(self):
         &#34;&#34;&#34;
-        
+        numpy.array: the before vector containing how many copies of each species are needed in order for the reaction to happen.
         &#34;&#34;&#34;
         return self.__pre.copy()
 
     @property
     def post(self):
+        &#34;&#34;&#34;
+        numpy.array: the after vector containing how many copies of each species result after the reaction.
+        &#34;&#34;&#34;
         return self.__post.copy()
     
     @property
     def propensity(self):
         &#34;&#34;&#34;
-        Return the propensities
-
-        Returns:
-            list[callable]: the propensities.
+        list[Callable]: list of decomposable propensities.
         &#34;&#34;&#34;
         return self.__propensities
 
     @property
     def params(self):
+        &#34;&#34;&#34;
+        list[str]: the list of parameter labels.
+        &#34;&#34;&#34;
         return self.__params.copy()
     
     @property
     def const(self):
+        &#34;&#34;&#34;
+        Union[None,float]: the reaction rate.
+        &#34;&#34;&#34;
         if isinstance(self.__const,str):
             return None
         else:
             return self.__const
 
     def cme_operator_tt(self, N , parameter_grid):
+        &#34;&#34;&#34;
+        The CME generator for a single reaction.
+
+        Args:
+            N (list[int]): the state truncation.
+            parameter_grid (list[numpy.array]): the parameters.
+
+        Returns:
+            torchtt.TT: the generator.
+        &#34;&#34;&#34;
         Att = None
 
 
@@ -158,6 +204,17 @@ class ChemicalReaction:
         return Att
     
     def construct_generator(self, N, params = None):
+        &#34;&#34;&#34;
+        Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+        
+
+        Args:
+            N (list[int]): the trucnatikn of the CME in every direction.
+            params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+        Returns:
+            scipy.sparse.csr_matrix: the generator in sparse format.
+        &#34;&#34;&#34;
         idx_row = None
         idx_col = None
         vals = None
@@ -233,12 +290,12 @@ class ReactionSystem:
 
     def __init__(self, species, reactions, params = []):
         &#34;&#34;&#34;
-        Reactio system class. 
+        Reaction system class. 
 
         Args:
-            species (list[str]): the names of the species.
-            reactions (list[ChemicalReaction]): _description_
-            params (list, optional): _description_. Defaults to [].
+            species (list[str]): the names of the species. The provided reactions must have the same species list (with the same ordering).
+            reactions (list[ChemicalReaction]): list of `ChemicalReaction` instances that define the system.
+            params (list, optional): the list of parameter labels. Every ChemicalReaction that is provided must have the parameter labels as a ordered subset of this argument. Defaults to [].
         &#34;&#34;&#34;
         self.__species = species.copy()
         self.__reactions = reactions.copy()
@@ -277,7 +334,22 @@ class ReactionSystem:
         self.__reactions.append(reaction)
 
     def generator_TT_parameters(self, N, params = [], eps = 1e-14):
+        &#34;&#34;&#34;
+        Constructs the generator in the TT format with a given state truncation `N`. 
+        If the ReactionSystem depends on parameters they have to be provided. The resulting generator is in this case:
+        $$ \mathsf{A}^{\\text{ext}}_{m_1...m_di_1...i_n,n_1...n_dj_1...j_n} \\mathsf{A}_{m_1...m_d,n_1...n_d}(\\theta^{(1)}_{i_1},...,\\theta^{(n)}_{i_n})  \\delta_{i_1}^{j_1} \cdots \delta_{i_n}^{j_n}$$
 
+        Args:
+            N (list[int]): the state truncation.
+            params (list[numpy.array], optional): the list of univariate parameters \( \{ \\theta_{i_k}^{(k)} \}_k \) that are used to construct the TP grid over the parameter space. Defaults to [].
+            eps (float, optional): the accuracy. Defaults to 1e-14.
+
+        Raises:
+            Exception: Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            torchtt.TT: the TT operator.
+        &#34;&#34;&#34;
         num_r = len(self.__reactions)
 
 
@@ -306,8 +378,23 @@ class ReactionSystem:
 
         return Att
     
-    def generatorTT(self, N,basis_params = [], eps = 1e-14):
+    def generatorTT(self, N, basis_params = [], eps = 1e-14):
+        &#34;&#34;&#34;
+        The CME generator represented using the geven TP basis over the parameter space.
+        The size of the generator is (N_1 x ... N_d x l_1 x ... l_n) x (N_1 x ... N_d x l_1 x ... l_n), where l_k are the dimensions of the univariata bases and n_k are the state truncations.
 
+        Args:
+            N (list[int]): the state truncation
+            basis_params (list[UnivariateBasis], optional): the basis over the parameter space. Defaults to [].
+            eps (float, optional): the accuracy for the TT decomposition. Defaults to 1e-14.
+
+        Raises:
+            Exception: Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            torchtt.TT: the generator.
+        &#34;&#34;&#34;
+        
         num_r = len(self.__reactions)
 
 
@@ -347,8 +434,18 @@ class ReactionSystem:
         Att = tntt.TT(cores)
         return Att
     
-    def generator_tt_galerkin(self, N, basis_params, eps = 1e-12):
+    def generator_tt_galerkin(self, N, basis_params, eps = 1e-13):
+        &#34;&#34;&#34;
+        Return the stiffness and the mass operator (and its inverse) in the TT format in case a Galerking projection is done over the parameter space.
 
+        Args:
+            N (list[int]): the state truncation.
+            basis_params (lsit[UnivariateBasis]): the univariate bases for the parameter space.
+            eps (float, optional): the accuracy for the TT decomposition. Defaults to 1e-13.
+
+        Returns:
+            torchtt.TT, torchtt.TT, torchtt.TT: the stiffness, mass and the mass inverse.
+        &#34;&#34;&#34;
         pts = [tn.tensor(b.integration_points(4)[0]) for b in basis_params]
         ws  = [tn.tensor(b.integration_points(4)[1]) for b in basis_params]
         
@@ -458,7 +555,7 @@ class ReactionSystem:
             time_max (float): the maximum time for the simulation.
 
         Returns:
-            (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+            numpy.array, numpy.array, numpy.array: the eaction times, the states after every reaction times and the indices of the reactions.
         &#34;&#34;&#34;
         Pre = []
         nu = []
@@ -474,12 +571,12 @@ class ReactionSystem:
         Discretize the output of `TTCME.ssa_single()` on the given time grid.
 
         Args:
-            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order) as a vector of length m.
             reaction_time (numpy.array): the reaction times.
             reaction_jumps (numpy.array): the reaction jumps.
 
         Returns:
-            _type_: _description_
+            numpy.array: the resulting states as a m x d array.
         &#34;&#34;&#34;
         states = Observations_grid(time_grid, reaction_time, reaction_jumps)
         return states</code></pre>
@@ -499,7 +596,43 @@ class ReactionSystem:
 <span>(</span><span>species, formula, constant, decomposable_propensity=[], params=[])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Chemical reaction class.</p>
+<p>The laels of the species are soecified as a list of strings and the formula is given as a string in the way you would write it on paper (some examples are given below).
+The reaction can have paraneter dependencies. The parameter names must be provided in a separate list as strings and must be passed to the propensities (even if propensity does not depend on them) in the oreder given in the list.
+The parameters can be part of the propensity function or the reaction rate.
+Custom propensity functions can be give. However, they must be decomposable in the sense <span><span class="MathJax_Preview"> \alpha(\mathbf{x}, p_1,...,p_n) = f_1(x_1,p_1,...,p_n) f_2(x_2,p_1,...,p_n) \cdots f_d(x_d,p_1,...,p_d) </span><script type="math/tex"> \alpha(\mathbf{x}, p_1,...,p_n) = f_1(x_1,p_1,...,p_n) f_2(x_2,p_1,...,p_n) \cdots f_d(x_d,p_1,...,p_d) </script></span>, where <span><span class="MathJax_Preview"> p_k </span><script type="math/tex"> p_k </script></span> are the parameters.
+The
+functions <span><span class="MathJax_Preview">f_k</span><script type="math/tex">f_k</script></span> are provided as function handles in the <code>decomposable_propensity</code> list.
+If no propensity is provided, the propensity is infered from the reaction formula.</p>
+<h2 id="example">Example</h2>
+<ul>
+<li>
+<p>Formula examples:</p>
+<ul>
+<li><code>"A+B-&gt;"</code>
+one copy from species A and one copy from B result in nothing</li>
+<li><code>"A+2*B-&gt;C"</code> one copy of A and 2 copies of B result in one C</li>
+<li><code>"-&gt;A"</code>
+one copy of A comes out of nothing.</li>
+</ul>
+</li>
+<li>
+<p>Propensity examples:</p>
+</li>
+</ul>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>species</code></strong> :&ensp;<code>list[str]</code></dt>
+<dd>the list of species labels.</dd>
+<dt><strong><code>formula</code></strong> :&ensp;<code>str</code></dt>
+<dd>the formula (must contain labels that are in the species list)</dd>
+<dt><strong><code>constant</code></strong> :&ensp;<code>Union[str, float]</code></dt>
+<dd>the reaction rate. If string is provided, the rate is a parameter dependent (name has to be provided in ithe params list). </dd>
+<dt><strong><code>decomposable_propensity</code></strong> :&ensp;<code>list[Callable]</code>, optional</dt>
+<dd><em>description</em>. Defaults to [].</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>list[str]</code>, optional</dt>
+<dd>the list of parameter names given as strings. Defaults to [].</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -507,7 +640,32 @@ class ReactionSystem:
 <pre><code class="python">class ChemicalReaction:
 
     def __init__(self, species, formula, constant, decomposable_propensity=[], params = []):
+        &#34;&#34;&#34;
+        Chemical reaction class.
+       
+        The laels of the species are soecified as a list of strings and the formula is given as a string in the way you would write it on paper (some examples are given below). 
+        The reaction can have paraneter dependencies. The parameter names must be provided in a separate list as strings and must be passed to the propensities (even if propensity does not depend on them) in the oreder given in the list. 
+        The parameters can be part of the propensity function or the reaction rate.
+        Custom propensity functions can be give. However, they must be decomposable in the sense \( \\alpha(\\mathbf{x}, p_1,...,p_n) = f_1(x_1,p_1,...,p_n) f_2(x_2,p_1,...,p_n) \cdots f_d(x_d,p_1,...,p_d) \), where \( p_k \) are the parameters.
+        The  functions \(f_k\) are provided as function handles in the `decomposable_propensity` list.
+        If no propensity is provided, the propensity is infered from the reaction formula.
+        
+        Example:
+        
+            * Formula examples:
+                - `&#34;A+B-&gt;&#34;`  one copy from species A and one copy from B result in nothing
+                - `&#34;A+2*B-&gt;C&#34;` one copy of A and 2 copies of B result in one C
+                - `&#34;-&gt;A&#34;`  one copy of A comes out of nothing.
+                            
+            * Propensity examples:
 
+        Args:
+            species (list[str]): the list of species labels.
+            formula (str): the formula (must contain labels that are in the species list)
+            constant (Union[str, float]): the reaction rate. If string is provided, the rate is a parameter dependent (name has to be provided in ithe params list). 
+            decomposable_propensity (list[Callable], optional): _description_. Defaults to [].
+            params (list[str], optional): the list of parameter names given as strings. Defaults to [].
+        &#34;&#34;&#34;
         self.__species = species.copy()
         self.__formula = formula
         self.__params = params.copy()
@@ -555,9 +713,10 @@ class ReactionSystem:
 
     def __repr__(self):
         &#34;&#34;&#34;
-
+        Represent the instance as a string.
+        
         Returns:
-            str: _description_
+            str: the string representation.
         &#34;&#34;&#34;
         s = &#39;Chemical reaction: &#39;+self.__formula + &#39; with parameters: &#39;+str(self.__params) 
         return s
@@ -565,36 +724,52 @@ class ReactionSystem:
     @property
     def pre(self):
         &#34;&#34;&#34;
-        
+        numpy.array: the before vector containing how many copies of each species are needed in order for the reaction to happen.
         &#34;&#34;&#34;
         return self.__pre.copy()
 
     @property
     def post(self):
+        &#34;&#34;&#34;
+        numpy.array: the after vector containing how many copies of each species result after the reaction.
+        &#34;&#34;&#34;
         return self.__post.copy()
     
     @property
     def propensity(self):
         &#34;&#34;&#34;
-        Return the propensities
-
-        Returns:
-            list[callable]: the propensities.
+        list[Callable]: list of decomposable propensities.
         &#34;&#34;&#34;
         return self.__propensities
 
     @property
     def params(self):
+        &#34;&#34;&#34;
+        list[str]: the list of parameter labels.
+        &#34;&#34;&#34;
         return self.__params.copy()
     
     @property
     def const(self):
+        &#34;&#34;&#34;
+        Union[None,float]: the reaction rate.
+        &#34;&#34;&#34;
         if isinstance(self.__const,str):
             return None
         else:
             return self.__const
 
     def cme_operator_tt(self, N , parameter_grid):
+        &#34;&#34;&#34;
+        The CME generator for a single reaction.
+
+        Args:
+            N (list[int]): the state truncation.
+            parameter_grid (list[numpy.array]): the parameters.
+
+        Returns:
+            torchtt.TT: the generator.
+        &#34;&#34;&#34;
         Att = None
 
 
@@ -628,6 +803,17 @@ class ReactionSystem:
         return Att
     
     def construct_generator(self, N, params = None):
+        &#34;&#34;&#34;
+        Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+        
+
+        Args:
+            N (list[int]): the trucnatikn of the CME in every direction.
+            params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+        Returns:
+            scipy.sparse.csr_matrix: the generator in sparse format.
+        &#34;&#34;&#34;
         idx_row = None
         idx_col = None
         vals = None
@@ -703,13 +889,16 @@ class ReactionSystem:
 <dl>
 <dt id="TTCME.ttcme.ChemicalReaction.const"><code class="name">var <span class="ident">const</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Union[None,float]: the reaction rate.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def const(self):
+    &#34;&#34;&#34;
+    Union[None,float]: the reaction rate.
+    &#34;&#34;&#34;
     if isinstance(self.__const,str):
         return None
     else:
@@ -718,31 +907,37 @@ def const(self):
 </dd>
 <dt id="TTCME.ttcme.ChemicalReaction.params"><code class="name">var <span class="ident">params</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>list[str]: the list of parameter labels.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def params(self):
+    &#34;&#34;&#34;
+    list[str]: the list of parameter labels.
+    &#34;&#34;&#34;
     return self.__params.copy()</code></pre>
 </details>
 </dd>
 <dt id="TTCME.ttcme.ChemicalReaction.post"><code class="name">var <span class="ident">post</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>numpy.array: the after vector containing how many copies of each species result after the reaction.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def post(self):
+    &#34;&#34;&#34;
+    numpy.array: the after vector containing how many copies of each species result after the reaction.
+    &#34;&#34;&#34;
     return self.__post.copy()</code></pre>
 </details>
 </dd>
 <dt id="TTCME.ttcme.ChemicalReaction.pre"><code class="name">var <span class="ident">pre</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>numpy.array: the before vector containing how many copies of each species are needed in order for the reaction to happen.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -750,19 +945,14 @@ def post(self):
 <pre><code class="python">@property
 def pre(self):
     &#34;&#34;&#34;
-    
+    numpy.array: the before vector containing how many copies of each species are needed in order for the reaction to happen.
     &#34;&#34;&#34;
     return self.__pre.copy()</code></pre>
 </details>
 </dd>
 <dt id="TTCME.ttcme.ChemicalReaction.propensity"><code class="name">var <span class="ident">propensity</span></code></dt>
 <dd>
-<div class="desc"><p>Return the propensities</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list[callable]</code></dt>
-<dd>the propensities.</dd>
-</dl></div>
+<div class="desc"><p>list[Callable]: list of decomposable propensities.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -770,10 +960,7 @@ def pre(self):
 <pre><code class="python">@property
 def propensity(self):
     &#34;&#34;&#34;
-    Return the propensities
-
-    Returns:
-        list[callable]: the propensities.
+    list[Callable]: list of decomposable propensities.
     &#34;&#34;&#34;
     return self.__propensities</code></pre>
 </details>
@@ -785,12 +972,34 @@ def propensity(self):
 <span>def <span class="ident">cme_operator_tt</span></span>(<span>self, N, parameter_grid)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The CME generator for a single reaction.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the state truncation.</dd>
+<dt><strong><code>parameter_grid</code></strong> :&ensp;<code>list[numpy.array]</code></dt>
+<dd>the parameters.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torchtt.TT</code></dt>
+<dd>the generator.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def cme_operator_tt(self, N , parameter_grid):
+    &#34;&#34;&#34;
+    The CME generator for a single reaction.
+
+    Args:
+        N (list[int]): the state truncation.
+        parameter_grid (list[numpy.array]): the parameters.
+
+    Returns:
+        torchtt.TT: the generator.
+    &#34;&#34;&#34;
     Att = None
 
 
@@ -828,12 +1037,35 @@ def propensity(self):
 <span>def <span class="ident">construct_generator</span></span>(<span>self, N, params=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Return the CME generator in <code>scipy.sparse.csr_matrix</code> for a fixed parameter passed as an argument.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the trucnatikn of the CME in every direction.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>Union[list[float], numpy.array, None]</code>, optional</dt>
+<dd>The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>scipy.sparse.csr_matrix</code></dt>
+<dd>the generator in sparse format.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def construct_generator(self, N, params = None):
+    &#34;&#34;&#34;
+    Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
+    
+
+    Args:
+        N (list[int]): the trucnatikn of the CME in every direction.
+        params (Union[list[float], numpy.array, None], optional): The parameter for which the CME operator should be computed. None means that the system depends on no parameter. Defaults to None.
+
+    Returns:
+        scipy.sparse.csr_matrix: the generator in sparse format.
+    &#34;&#34;&#34;
     idx_row = None
     idx_col = None
     vals = None
@@ -913,15 +1145,15 @@ def propensity(self):
 <span>(</span><span>species, reactions, params=[])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Reactio system class. </p>
+<div class="desc"><p>Reaction system class. </p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>species</code></strong> :&ensp;<code>list[str]</code></dt>
-<dd>the names of the species.</dd>
+<dd>the names of the species. The provided reactions must have the same species list (with the same ordering).</dd>
 <dt><strong><code>reactions</code></strong> :&ensp;<code>list[<a title="TTCME.ttcme.ChemicalReaction" href="#TTCME.ttcme.ChemicalReaction">ChemicalReaction</a>]</code></dt>
-<dd><em>description</em></dd>
+<dd>list of <code><a title="TTCME.ttcme.ChemicalReaction" href="#TTCME.ttcme.ChemicalReaction">ChemicalReaction</a></code> instances that define the system.</dd>
 <dt><strong><code>params</code></strong> :&ensp;<code>list</code>, optional</dt>
-<dd><em>description</em>. Defaults to [].</dd>
+<dd>the list of parameter labels. Every ChemicalReaction that is provided must have the parameter labels as a ordered subset of this argument. Defaults to [].</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -931,12 +1163,12 @@ def propensity(self):
 
     def __init__(self, species, reactions, params = []):
         &#34;&#34;&#34;
-        Reactio system class. 
+        Reaction system class. 
 
         Args:
-            species (list[str]): the names of the species.
-            reactions (list[ChemicalReaction]): _description_
-            params (list, optional): _description_. Defaults to [].
+            species (list[str]): the names of the species. The provided reactions must have the same species list (with the same ordering).
+            reactions (list[ChemicalReaction]): list of `ChemicalReaction` instances that define the system.
+            params (list, optional): the list of parameter labels. Every ChemicalReaction that is provided must have the parameter labels as a ordered subset of this argument. Defaults to [].
         &#34;&#34;&#34;
         self.__species = species.copy()
         self.__reactions = reactions.copy()
@@ -975,7 +1207,22 @@ def propensity(self):
         self.__reactions.append(reaction)
 
     def generator_TT_parameters(self, N, params = [], eps = 1e-14):
+        &#34;&#34;&#34;
+        Constructs the generator in the TT format with a given state truncation `N`. 
+        If the ReactionSystem depends on parameters they have to be provided. The resulting generator is in this case:
+        $$ \mathsf{A}^{\\text{ext}}_{m_1...m_di_1...i_n,n_1...n_dj_1...j_n} \\mathsf{A}_{m_1...m_d,n_1...n_d}(\\theta^{(1)}_{i_1},...,\\theta^{(n)}_{i_n})  \\delta_{i_1}^{j_1} \cdots \delta_{i_n}^{j_n}$$
 
+        Args:
+            N (list[int]): the state truncation.
+            params (list[numpy.array], optional): the list of univariate parameters \( \{ \\theta_{i_k}^{(k)} \}_k \) that are used to construct the TP grid over the parameter space. Defaults to [].
+            eps (float, optional): the accuracy. Defaults to 1e-14.
+
+        Raises:
+            Exception: Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            torchtt.TT: the TT operator.
+        &#34;&#34;&#34;
         num_r = len(self.__reactions)
 
 
@@ -1004,8 +1251,23 @@ def propensity(self):
 
         return Att
     
-    def generatorTT(self, N,basis_params = [], eps = 1e-14):
+    def generatorTT(self, N, basis_params = [], eps = 1e-14):
+        &#34;&#34;&#34;
+        The CME generator represented using the geven TP basis over the parameter space.
+        The size of the generator is (N_1 x ... N_d x l_1 x ... l_n) x (N_1 x ... N_d x l_1 x ... l_n), where l_k are the dimensions of the univariata bases and n_k are the state truncations.
 
+        Args:
+            N (list[int]): the state truncation
+            basis_params (list[UnivariateBasis], optional): the basis over the parameter space. Defaults to [].
+            eps (float, optional): the accuracy for the TT decomposition. Defaults to 1e-14.
+
+        Raises:
+            Exception: Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+        Returns:
+            torchtt.TT: the generator.
+        &#34;&#34;&#34;
+        
         num_r = len(self.__reactions)
 
 
@@ -1045,8 +1307,18 @@ def propensity(self):
         Att = tntt.TT(cores)
         return Att
     
-    def generator_tt_galerkin(self, N, basis_params, eps = 1e-12):
+    def generator_tt_galerkin(self, N, basis_params, eps = 1e-13):
+        &#34;&#34;&#34;
+        Return the stiffness and the mass operator (and its inverse) in the TT format in case a Galerking projection is done over the parameter space.
 
+        Args:
+            N (list[int]): the state truncation.
+            basis_params (lsit[UnivariateBasis]): the univariate bases for the parameter space.
+            eps (float, optional): the accuracy for the TT decomposition. Defaults to 1e-13.
+
+        Returns:
+            torchtt.TT, torchtt.TT, torchtt.TT: the stiffness, mass and the mass inverse.
+        &#34;&#34;&#34;
         pts = [tn.tensor(b.integration_points(4)[0]) for b in basis_params]
         ws  = [tn.tensor(b.integration_points(4)[1]) for b in basis_params]
         
@@ -1156,7 +1428,7 @@ def propensity(self):
             time_max (float): the maximum time for the simulation.
 
         Returns:
-            (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+            numpy.array, numpy.array, numpy.array: the eaction times, the states after every reaction times and the indices of the reactions.
         &#34;&#34;&#34;
         Pre = []
         nu = []
@@ -1172,12 +1444,12 @@ def propensity(self):
         Discretize the output of `TTCME.ssa_single()` on the given time grid.
 
         Args:
-            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+            time_grid (numpy.array): the time grid (time steps must be sorted in ascending order) as a vector of length m.
             reaction_time (numpy.array): the reaction times.
             reaction_jumps (numpy.array): the reaction jumps.
 
         Returns:
-            _type_: _description_
+            numpy.array: the resulting states as a m x d array.
         &#34;&#34;&#34;
         states = Observations_grid(time_grid, reaction_time, reaction_jumps)
         return states</code></pre>
@@ -1230,13 +1502,48 @@ def reactions(self):
 <span>def <span class="ident">generatorTT</span></span>(<span>self, N, basis_params=[], eps=1e-14)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The CME generator represented using the geven TP basis over the parameter space.
+The size of the generator is (N_1 x &hellip; N_d x l_1 x &hellip; l_n) x (N_1 x &hellip; N_d x l_1 x &hellip; l_n), where l_k are the dimensions of the univariata bases and n_k are the state truncations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the state truncation</dd>
+<dt><strong><code>basis_params</code></strong> :&ensp;<code>list[UnivariateBasis]</code>, optional</dt>
+<dd>the basis over the parameter space. Defaults to [].</dd>
+<dt><strong><code>eps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>the accuracy for the TT decomposition. Defaults to 1e-14.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Exception</code></dt>
+<dd>Parameters of the individual reactions should not appear in other order than given for the entire reaction system.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torchtt.TT</code></dt>
+<dd>the generator.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generatorTT(self, N,basis_params = [], eps = 1e-14):
+<pre><code class="python">def generatorTT(self, N, basis_params = [], eps = 1e-14):
+    &#34;&#34;&#34;
+    The CME generator represented using the geven TP basis over the parameter space.
+    The size of the generator is (N_1 x ... N_d x l_1 x ... l_n) x (N_1 x ... N_d x l_1 x ... l_n), where l_k are the dimensions of the univariata bases and n_k are the state truncations.
 
+    Args:
+        N (list[int]): the state truncation
+        basis_params (list[UnivariateBasis], optional): the basis over the parameter space. Defaults to [].
+        eps (float, optional): the accuracy for the TT decomposition. Defaults to 1e-14.
+
+    Raises:
+        Exception: Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+    Returns:
+        torchtt.TT: the generator.
+    &#34;&#34;&#34;
+    
     num_r = len(self.__reactions)
 
 
@@ -1281,13 +1588,51 @@ def reactions(self):
 <span>def <span class="ident">generator_TT_parameters</span></span>(<span>self, N, params=[], eps=1e-14)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Constructs the generator in the TT format with a given state truncation <code>N</code>.
+If the ReactionSystem depends on parameters they have to be provided. The resulting generator is in this case:
+<span><span class="MathJax_Preview"> \mathsf{A}^{\text{ext}}_{m_1...m_di_1...i_n,n_1...n_dj_1...j_n} \mathsf{A}_{m_1...m_d,n_1...n_d}(\theta^{(1)}_{i_1},...,\theta^{(n)}_{i_n})
+\delta_{i_1}^{j_1} \cdots \delta_{i_n}^{j_n}</span><script type="math/tex; mode=display"> \mathsf{A}^{\text{ext}}_{m_1...m_di_1...i_n,n_1...n_dj_1...j_n} \mathsf{A}_{m_1...m_d,n_1...n_d}(\theta^{(1)}_{i_1},...,\theta^{(n)}_{i_n})
+\delta_{i_1}^{j_1} \cdots \delta_{i_n}^{j_n}</script></span></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the state truncation.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>list[numpy.array]</code>, optional</dt>
+<dd>the list of univariate parameters <span><span class="MathJax_Preview"> \{ \theta_{i_k}^{(k)} \}_k </span><script type="math/tex"> \{ \theta_{i_k}^{(k)} \}_k </script></span> that are used to construct the TP grid over the parameter space. Defaults to [].</dd>
+<dt><strong><code>eps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>the accuracy. Defaults to 1e-14.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Exception</code></dt>
+<dd>Parameters of the individual reactions should not appear in other order than given for the entire reaction system.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torchtt.TT</code></dt>
+<dd>the TT operator.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def generator_TT_parameters(self, N, params = [], eps = 1e-14):
+    &#34;&#34;&#34;
+    Constructs the generator in the TT format with a given state truncation `N`. 
+    If the ReactionSystem depends on parameters they have to be provided. The resulting generator is in this case:
+    $$ \mathsf{A}^{\\text{ext}}_{m_1...m_di_1...i_n,n_1...n_dj_1...j_n} \\mathsf{A}_{m_1...m_d,n_1...n_d}(\\theta^{(1)}_{i_1},...,\\theta^{(n)}_{i_n})  \\delta_{i_1}^{j_1} \cdots \delta_{i_n}^{j_n}$$
 
+    Args:
+        N (list[int]): the state truncation.
+        params (list[numpy.array], optional): the list of univariate parameters \( \{ \\theta_{i_k}^{(k)} \}_k \) that are used to construct the TP grid over the parameter space. Defaults to [].
+        eps (float, optional): the accuracy. Defaults to 1e-14.
+
+    Raises:
+        Exception: Parameters of the individual reactions should not appear in other order than given for the entire reaction system.
+
+    Returns:
+        torchtt.TT: the TT operator.
+    &#34;&#34;&#34;
     num_r = len(self.__reactions)
 
 
@@ -1384,16 +1729,40 @@ def reactions(self):
 </details>
 </dd>
 <dt id="TTCME.ttcme.ReactionSystem.generator_tt_galerkin"><code class="name flex">
-<span>def <span class="ident">generator_tt_galerkin</span></span>(<span>self, N, basis_params, eps=1e-12)</span>
+<span>def <span class="ident">generator_tt_galerkin</span></span>(<span>self, N, basis_params, eps=1e-13)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Return the stiffness and the mass operator (and its inverse) in the TT format in case a Galerking projection is done over the parameter space.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>the state truncation.</dd>
+<dt><strong><code>basis_params</code></strong> :&ensp;<code>lsit[UnivariateBasis]</code></dt>
+<dd>the univariate bases for the parameter space.</dd>
+<dt><strong><code>eps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>the accuracy for the TT decomposition. Defaults to 1e-13.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torchtt.TT, torchtt.TT, torchtt.TT</code></dt>
+<dd>the stiffness, mass and the mass inverse.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generator_tt_galerkin(self, N, basis_params, eps = 1e-12):
+<pre><code class="python">def generator_tt_galerkin(self, N, basis_params, eps = 1e-13):
+    &#34;&#34;&#34;
+    Return the stiffness and the mass operator (and its inverse) in the TT format in case a Galerking projection is done over the parameter space.
 
+    Args:
+        N (list[int]): the state truncation.
+        basis_params (lsit[UnivariateBasis]): the univariate bases for the parameter space.
+        eps (float, optional): the accuracy for the TT decomposition. Defaults to 1e-13.
+
+    Returns:
+        torchtt.TT, torchtt.TT, torchtt.TT: the stiffness, mass and the mass inverse.
+    &#34;&#34;&#34;
     pts = [tn.tensor(b.integration_points(4)[0]) for b in basis_params]
     ws  = [tn.tensor(b.integration_points(4)[1]) for b in basis_params]
     
@@ -1438,7 +1807,7 @@ def reactions(self):
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>time_grid</code></strong> :&ensp;<code>numpy.array</code></dt>
-<dd>the time grid (time steps must be sorted in ascending order).</dd>
+<dd>the time grid (time steps must be sorted in ascending order) as a vector of length m.</dd>
 <dt><strong><code>reaction_time</code></strong> :&ensp;<code>numpy.array</code></dt>
 <dd>the reaction times.</dd>
 <dt><strong><code>reaction_jumps</code></strong> :&ensp;<code>numpy.array</code></dt>
@@ -1446,8 +1815,8 @@ def reactions(self):
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>_type_</code></dt>
-<dd><em>description</em></dd>
+<dt><code>numpy.array</code></dt>
+<dd>the resulting states as a m x d array.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -1458,12 +1827,12 @@ def reactions(self):
     Discretize the output of `TTCME.ssa_single()` on the given time grid.
 
     Args:
-        time_grid (numpy.array): the time grid (time steps must be sorted in ascending order).
+        time_grid (numpy.array): the time grid (time steps must be sorted in ascending order) as a vector of length m.
         reaction_time (numpy.array): the reaction times.
         reaction_jumps (numpy.array): the reaction jumps.
 
     Returns:
-        _type_: _description_
+        numpy.array: the resulting states as a m x d array.
     &#34;&#34;&#34;
     states = Observations_grid(time_grid, reaction_time, reaction_jumps)
     return states</code></pre>
@@ -1533,7 +1902,10 @@ def reactions(self):
 <dd>the maximum time for the simulation.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>(numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.</p></div>
+<dl>
+<dt><code>numpy.array, numpy.array, numpy.array</code></dt>
+<dd>the eaction times, the states after every reaction times and the indices of the reactions.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1547,7 +1919,7 @@ def reactions(self):
         time_max (float): the maximum time for the simulation.
 
     Returns:
-        (numpy.array, numpy.array, numpy.array): the eaction times, the states after every reaction times and the indices of the reactions.
+        numpy.array, numpy.array, numpy.array: the eaction times, the states after every reaction times and the indices of the reactions.
     &#34;&#34;&#34;
     Pre = []
     nu = []
