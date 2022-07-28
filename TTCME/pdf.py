@@ -197,14 +197,22 @@ class GaussianObservation:
 class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
         """
+        Probability density function approximation using a tensor-product basis:   
+        $$ p(x_1,...,x_d|y_1,...,y_{d'})  = \\sum\\limits_{k_1,...,k_d,n_1,...,n_{d'}} \\mathsf{d}_{k_1...k_dn_1...n_d} b^{(1)}(x_1) \\cdots b^{(d)}(x_d) b'^{(1)}(y_1) \\cdots b'^{(d')}(y_{d'}),$$
+        where \( \\mathsf{d}\) is the DoF tensor and is represented in the TT format.
         
+        Using the subscript operator, the pdf can be evaluated at given values. Following possible ways of using the subscript operator are possible:
+         
+         - For a conditional PDF, the `Ellipsis` can be used to evaluate the variables we condition on. As an example, for the `pdfTT` instance `p` representing the conditional `p(a,b|c,d)`, the expression `p[...,1,2]` represents the PDF `p(a,b|c=1,d=2)`.
+         - If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.
+
 
         Args:
-            basis (_type_): _description_
-            basis_conditioned (list, optional): _description_. Defaults to [].
-            variable_names (list, optional): _description_. Defaults to [].
-            conditioned_variable_names (list, optional): _description_. Defaults to [].
-            dofs (_type_, optional): _description_. Defaults to None.
+            basis (list[UnivariateBasis]): the univariate bases used to construct the tensor-product basis (\( b^{(k)} \) in the formula above). 
+            basis_conditioned (list[UnivariateBasis], optional): the univariate bases in case a conditional is used (corresponding to the variables right of the conditioned sign). In the equation above are denoted by \( b'^{(k)} \). Defaults to [].
+            variable_names (list[str], optional): the name of variables as a list of strings. Defaults to [].
+            conditioned_variable_names (list[str], optional): the names of the bariables that we condition on. Defaults to [].
+            dofs (torchtt.TT, optional): the dofs in the TT format. If None is provided an uniform PDF is created. Defaults to None.
         """
         self.__d = len(basis)
         self.__dc = len(basis_conditioned) 
@@ -222,29 +230,47 @@ class pdfTT():
 
 
     def copy(self):
+        """
+        Create a copy of the `pdfTT` instance.
+
+        Returns:
+            pdfTT: the copy.
+        """
         return copy.deepcopy(self)
 
     @property
     def basis(self):
         """
-
+        list[UnivariateBasis]: the basis used.
         """
         return self.__basis.copy()
 
     @property
     def basis_conditioned(self):
+        """
+        list[UnivariateBasis]: the basis used for the conditioned variables.
+        """
         return self.__basis_cond.copy()
 
     @property
     def variable_names(self):
+        """
+        list[str]: the name of the variables.
+        """
         return self.__variable_names.copy()
 
     @property
     def conditioned_variable_names(self):
+        """ 
+        list[str]: the name of the variables we condition on.
+        """
         return self.__conditioned_variable_names.copy()
 
     @property
     def dofs(self):
+        """
+        torchtt.TT: the dofs tensor in the TT format.
+        """
         return self.__tt
 
     @dofs.setter 
@@ -432,6 +458,19 @@ class pdfTT():
         return beval @ self.__tt if beval.is_ttm else tntt.dot(beval, self.__tt)
         
     def __getitem__(self, items):
+        """
+        Evaluate the PDF instance. Following possible ways of using the subscript operator are possible:
+         
+         - For a conditional PDF, the `Ellipsis` can be used to evaluate the variables we condition on. As an example, for the `pdfTT` instance `p` representing the conditional `p(a,b|c,d)`, the expression `p[...,1,2]` represents the PDF `p(a,b|c=1,d=2)`.
+         - If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.
+
+        Args:
+            items (tuple): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        
 #         if items[0] == Ellipsis:
 #             idx = [slice(None,None,None)]*(self.__d+self.__dc-len(items))
 #         else:

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>TTCME.TimeIntegrator API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Tensor train integrator for linear ODEs in the TT format (implements [tAMEn](https://arxiv.org/abs/1403.8085))" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,11 +23,15 @@
 <h1 class="title">Module <code>TTCME.TimeIntegrator</code></h1>
 </header>
 <section id="section-intro">
+<p>Tensor train integrator for linear ODEs in the TT format (implements <a href="https://arxiv.org/abs/1403.8085">tAMEn</a>)</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import torch as tn
+<pre><code class="python">&#34;&#34;&#34;
+Tensor train integrator for linear ODEs in the TT format (implements [tAMEn](https://arxiv.org/abs/1403.8085))
+&#34;&#34;&#34;
+import torch as tn
 import torchtt as tntt
 import numpy as np
 from .basis import *
@@ -36,13 +40,23 @@ from .basis import *
 class TTInt():
     
     def  __init__(self, Operator, epsilon = 1e-6, N_max = 64, dt_max = 1e-1, method = &#39;implicit-euler&#39;):
-        
+        &#34;&#34;&#34;
+        The ODE integrator in the TT format
+        $$ \\frac{\\text{d} \mathsf{p}(t)}{\text{d} t}\\mathsf{Ap} $$
+
+        Args:
+            Operator (torchtt.TT): the l
+            epsilon (float, optional): solver accuracy. Defaults to 1e-6.
+            N_max (int, optional): maximum mode size for the time dimension. Defaults to 64.
+            dt_max (float, optional): maximum timestep. Defaults to 1e-1.
+            method (str, optional): the discretization method of choice. Possibilities are `&#39;implicit-euler&#39;`, `&#39;crank–nicolson&#39;`, `&#39;cheby&#39;` and `&#39;legendre&#39;`. Defaults to &#39;implicit-euler&#39;.
+        &#34;&#34;&#34;
         self.__A_tt = Operator
         self.__epsilon = epsilon
         self.__N_max = N_max
         self.__method = method
         
-    def get_SP(self,T,N):
+    def _get_SP(self,T,N):
         if self.__method == &#39;implicit-euler&#39;:
             S = np.eye(N)-np.diag(np.ones(N-1),-1)
             P = T*np.eye(N)/N
@@ -69,7 +83,23 @@ class TTInt():
         return S,P,ev,basis
         
     def solve(self, initial_tt, T, intervals = None, return_all = False,nswp = 40,qtt = False,verb = False,rounding = True, device = &#39;cpu&#39;):
-        
+        &#34;&#34;&#34;
+        Solve for the time interval of length `T` for the initial value `initial_tt`.
+
+        Args:
+            initial_tt (torchtt.TT): the initial value in the TT format.
+            T (float): interval length.
+            intervals (_type_, optional): _description_. Defaults to None.
+            return_all (bool, optional): return the solution after all subintervals. Defaults to False.
+            nswp (int, optional): number of sweeps for the AMEn solver. Defaults to 40.
+            qtt (bool, optional): use QTT or not. Defaults to False.
+            verb (bool, optional): display additional information during runtime. Defaults to False.
+            rounding (bool, optional): perform rounding after the individual subintervals. Defaults to True.
+            device (str, optional): the device the tensor should be saved on (set to `&#39;cuda:0&#39;` if a GPU is available). Defaults to &#39;cpu&#39;.
+
+        Returns:
+            torchtt.TT: the result.
+        &#34;&#34;&#34;
         dev = self.__A_tt.cores[0].device
        
         if intervals == None:
@@ -81,7 +111,7 @@ class TTInt():
             
             
                 
-            S,P,ev,basis = self.get_SP(dT,Nt)
+            S,P,ev,basis = self._get_SP(dT,Nt)
             
             S = tn.tensor(S).to(dev)
             P = tn.tensor(P).to(dev)
@@ -185,7 +215,23 @@ class TTInt():
 <span>(</span><span>Operator, epsilon=1e-06, N_max=64, dt_max=0.1, method='implicit-euler')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The ODE integrator in the TT format
+<span><span class="MathJax_Preview"> \frac{\text{d} \mathsf{p}(t)}{
+ext{d} t}\mathsf{Ap} </span><script type="math/tex; mode=display"> \frac{\text{d} \mathsf{p}(t)}{
+ext{d} t}\mathsf{Ap} </script></span></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>Operator</code></strong> :&ensp;<code>torchtt.TT</code></dt>
+<dd>the l</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>solver accuracy. Defaults to 1e-6.</dd>
+<dt><strong><code>N_max</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>maximum mode size for the time dimension. Defaults to 64.</dd>
+<dt><strong><code>dt_max</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>maximum timestep. Defaults to 1e-1.</dd>
+<dt><strong><code>method</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>the discretization method of choice. Possibilities are <code>'implicit-euler'</code>, <code>'crank–nicolson'</code>, <code>'cheby'</code> and <code>'legendre'</code>. Defaults to 'implicit-euler'.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -193,13 +239,23 @@ class TTInt():
 <pre><code class="python">class TTInt():
     
     def  __init__(self, Operator, epsilon = 1e-6, N_max = 64, dt_max = 1e-1, method = &#39;implicit-euler&#39;):
-        
+        &#34;&#34;&#34;
+        The ODE integrator in the TT format
+        $$ \\frac{\\text{d} \mathsf{p}(t)}{\text{d} t}\\mathsf{Ap} $$
+
+        Args:
+            Operator (torchtt.TT): the l
+            epsilon (float, optional): solver accuracy. Defaults to 1e-6.
+            N_max (int, optional): maximum mode size for the time dimension. Defaults to 64.
+            dt_max (float, optional): maximum timestep. Defaults to 1e-1.
+            method (str, optional): the discretization method of choice. Possibilities are `&#39;implicit-euler&#39;`, `&#39;crank–nicolson&#39;`, `&#39;cheby&#39;` and `&#39;legendre&#39;`. Defaults to &#39;implicit-euler&#39;.
+        &#34;&#34;&#34;
         self.__A_tt = Operator
         self.__epsilon = epsilon
         self.__N_max = N_max
         self.__method = method
         
-    def get_SP(self,T,N):
+    def _get_SP(self,T,N):
         if self.__method == &#39;implicit-euler&#39;:
             S = np.eye(N)-np.diag(np.ones(N-1),-1)
             P = T*np.eye(N)/N
@@ -226,7 +282,23 @@ class TTInt():
         return S,P,ev,basis
         
     def solve(self, initial_tt, T, intervals = None, return_all = False,nswp = 40,qtt = False,verb = False,rounding = True, device = &#39;cpu&#39;):
-        
+        &#34;&#34;&#34;
+        Solve for the time interval of length `T` for the initial value `initial_tt`.
+
+        Args:
+            initial_tt (torchtt.TT): the initial value in the TT format.
+            T (float): interval length.
+            intervals (_type_, optional): _description_. Defaults to None.
+            return_all (bool, optional): return the solution after all subintervals. Defaults to False.
+            nswp (int, optional): number of sweeps for the AMEn solver. Defaults to 40.
+            qtt (bool, optional): use QTT or not. Defaults to False.
+            verb (bool, optional): display additional information during runtime. Defaults to False.
+            rounding (bool, optional): perform rounding after the individual subintervals. Defaults to True.
+            device (str, optional): the device the tensor should be saved on (set to `&#39;cuda:0&#39;` if a GPU is available). Defaults to &#39;cpu&#39;.
+
+        Returns:
+            torchtt.TT: the result.
+        &#34;&#34;&#34;
         dev = self.__A_tt.cores[0].device
        
         if intervals == None:
@@ -238,7 +310,7 @@ class TTInt():
             
             
                 
-            S,P,ev,basis = self.get_SP(dT,Nt)
+            S,P,ev,basis = self._get_SP(dT,Nt)
             
             S = tn.tensor(S).to(dev)
             P = tn.tensor(P).to(dev)
@@ -328,53 +400,59 @@ class TTInt():
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="TTCME.TimeIntegrator.TTInt.get_SP"><code class="name flex">
-<span>def <span class="ident">get_SP</span></span>(<span>self, T, N)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_SP(self,T,N):
-    if self.__method == &#39;implicit-euler&#39;:
-        S = np.eye(N)-np.diag(np.ones(N-1),-1)
-        P = T*np.eye(N)/N
-        ev = (S@np.ones((N,1))).flatten()
-        basis = None
-    elif self.__method == &#39;crank–nicolson&#39;:
-        S = np.eye(N)-np.diag(np.ones(N-1),-1)
-        P = np.eye(N)+np.diag(np.ones(N-1),-1)
-        P[0,:] = 0
-        P = P * T / (2*(N-1))
-        ev = (S@np.ones((N,1))).flatten()
-        basis = None
-    elif self.__method == &#39;cheby&#39;:
-        basis = ChebyBasis(N,[0,T])
-        S = basis.stiff+np.outer(basis(np.array([0])).flatten(),basis(np.array([0])).flatten())
-        P = basis.mass
-        ev = basis(np.array([0])).flatten()
-    elif self.__method == &#39;legendre&#39;:
-        basis = LegendreBasis(N,[0,T])
-        S = basis.stiff+np.outer(basis(np.array([0])).flatten(),basis(np.array([0])).flatten())
-        P = basis.mass
-        ev = basis(np.array([0])).flatten()
-        
-    return S,P,ev,basis</code></pre>
-</details>
-</dd>
 <dt id="TTCME.TimeIntegrator.TTInt.solve"><code class="name flex">
 <span>def <span class="ident">solve</span></span>(<span>self, initial_tt, T, intervals=None, return_all=False, nswp=40, qtt=False, verb=False, rounding=True, device='cpu')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Solve for the time interval of length <code>T</code> for the initial value <code>initial_tt</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>initial_tt</code></strong> :&ensp;<code>torchtt.TT</code></dt>
+<dd>the initial value in the TT format.</dd>
+<dt><strong><code>T</code></strong> :&ensp;<code>float</code></dt>
+<dd>interval length.</dd>
+<dt><strong><code>intervals</code></strong> :&ensp;<code>_type_</code>, optional</dt>
+<dd><em>description</em>. Defaults to None.</dd>
+<dt><strong><code>return_all</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>return the solution after all subintervals. Defaults to False.</dd>
+<dt><strong><code>nswp</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>number of sweeps for the AMEn solver. Defaults to 40.</dd>
+<dt><strong><code>qtt</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>use QTT or not. Defaults to False.</dd>
+<dt><strong><code>verb</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>display additional information during runtime. Defaults to False.</dd>
+<dt><strong><code>rounding</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>perform rounding after the individual subintervals. Defaults to True.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>the device the tensor should be saved on (set to <code>'cuda:0'</code> if a GPU is available). Defaults to 'cpu'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torchtt.TT</code></dt>
+<dd>the result.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def solve(self, initial_tt, T, intervals = None, return_all = False,nswp = 40,qtt = False,verb = False,rounding = True, device = &#39;cpu&#39;):
-    
+    &#34;&#34;&#34;
+    Solve for the time interval of length `T` for the initial value `initial_tt`.
+
+    Args:
+        initial_tt (torchtt.TT): the initial value in the TT format.
+        T (float): interval length.
+        intervals (_type_, optional): _description_. Defaults to None.
+        return_all (bool, optional): return the solution after all subintervals. Defaults to False.
+        nswp (int, optional): number of sweeps for the AMEn solver. Defaults to 40.
+        qtt (bool, optional): use QTT or not. Defaults to False.
+        verb (bool, optional): display additional information during runtime. Defaults to False.
+        rounding (bool, optional): perform rounding after the individual subintervals. Defaults to True.
+        device (str, optional): the device the tensor should be saved on (set to `&#39;cuda:0&#39;` if a GPU is available). Defaults to &#39;cpu&#39;.
+
+    Returns:
+        torchtt.TT: the result.
+    &#34;&#34;&#34;
     dev = self.__A_tt.cores[0].device
    
     if intervals == None:
@@ -386,7 +464,7 @@ class TTInt():
         
         
             
-        S,P,ev,basis = self.get_SP(dT,Nt)
+        S,P,ev,basis = self._get_SP(dT,Nt)
         
         S = tn.tensor(S).to(dev)
         P = tn.tensor(P).to(dev)
@@ -496,7 +574,6 @@ class TTInt():
 <li>
 <h4><code><a title="TTCME.TimeIntegrator.TTInt" href="#TTCME.TimeIntegrator.TTInt">TTInt</a></code></h4>
 <ul class="">
-<li><code><a title="TTCME.TimeIntegrator.TTInt.get_SP" href="#TTCME.TimeIntegrator.TTInt.get_SP">get_SP</a></code></li>
 <li><code><a title="TTCME.TimeIntegrator.TTInt.solve" href="#TTCME.TimeIntegrator.TTInt.solve">solve</a></code></li>
 </ul>
 </li>

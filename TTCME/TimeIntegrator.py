@@ -1,3 +1,6 @@
+"""
+Tensor train integrator for linear ODEs in the TT format (implements [tAMEn](https://arxiv.org/abs/1403.8085))
+"""
 import torch as tn
 import torchtt as tntt
 import numpy as np
@@ -7,13 +10,23 @@ from .basis import *
 class TTInt():
     
     def  __init__(self, Operator, epsilon = 1e-6, N_max = 64, dt_max = 1e-1, method = 'implicit-euler'):
-        
+        """
+        The ODE integrator in the TT format
+        $$ \\frac{\\text{d} \mathsf{p}(t)}{\text{d} t}\\mathsf{Ap} $$
+
+        Args:
+            Operator (torchtt.TT): the l
+            epsilon (float, optional): solver accuracy. Defaults to 1e-6.
+            N_max (int, optional): maximum mode size for the time dimension. Defaults to 64.
+            dt_max (float, optional): maximum timestep. Defaults to 1e-1.
+            method (str, optional): the discretization method of choice. Possibilities are `'implicit-euler'`, `'crank–nicolson'`, `'cheby'` and `'legendre'`. Defaults to 'implicit-euler'.
+        """
         self.__A_tt = Operator
         self.__epsilon = epsilon
         self.__N_max = N_max
         self.__method = method
         
-    def get_SP(self,T,N):
+    def _get_SP(self,T,N):
         if self.__method == 'implicit-euler':
             S = np.eye(N)-np.diag(np.ones(N-1),-1)
             P = T*np.eye(N)/N
@@ -40,7 +53,23 @@ class TTInt():
         return S,P,ev,basis
         
     def solve(self, initial_tt, T, intervals = None, return_all = False,nswp = 40,qtt = False,verb = False,rounding = True, device = 'cpu'):
-        
+        """
+        Solve for the time interval of length `T` for the initial value `initial_tt`.
+
+        Args:
+            initial_tt (torchtt.TT): the initial value in the TT format.
+            T (float): interval length.
+            intervals (_type_, optional): _description_. Defaults to None.
+            return_all (bool, optional): return the solution after all subintervals. Defaults to False.
+            nswp (int, optional): number of sweeps for the AMEn solver. Defaults to 40.
+            qtt (bool, optional): use QTT or not. Defaults to False.
+            verb (bool, optional): display additional information during runtime. Defaults to False.
+            rounding (bool, optional): perform rounding after the individual subintervals. Defaults to True.
+            device (str, optional): the device the tensor should be saved on (set to `'cuda:0'` if a GPU is available). Defaults to 'cpu'.
+
+        Returns:
+            torchtt.TT: the result.
+        """
         dev = self.__A_tt.cores[0].device
        
         if intervals == None:
@@ -52,7 +81,7 @@ class TTInt():
             
             
                 
-            S,P,ev,basis = self.get_SP(dT,Nt)
+            S,P,ev,basis = self._get_SP(dT,Nt)
             
             S = tn.tensor(S).to(dev)
             P = tn.tensor(P).to(dev)

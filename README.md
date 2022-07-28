@@ -22,6 +22,9 @@ pip install git+https://github.com/ion-g-ion/tt-cme
 
 ## Packages
 
+The documentation can be found [here](https://ion-g-ion.github.io/tt-cme/TTCME/index.html).
+
+
 ## Scripts and examples:
 
 In the [examples](./examples/) folder a couple of examples are presented. 

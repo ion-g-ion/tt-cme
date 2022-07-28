@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>TTCME API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="TT-CME package with [torchTT](https://github.com/ion-g-ion/torchTT) as backend for the Tensor-Train computations." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,11 +23,15 @@
 <h1 class="title">Package <code>TTCME</code></h1>
 </header>
 <section id="section-intro">
+<p>TT-CME package with <a href="https://github.com/ion-g-ion/torchTT">torchTT</a> as backend for the Tensor-Train computations.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .ttcme import ChemicalReaction, ReactionSystem
+<pre><code class="python">&#34;&#34;&#34; 
+TT-CME package with [torchTT](https://github.com/ion-g-ion/torchTT) as backend for the Tensor-Train computations.
+&#34;&#34;&#34;
+from .ttcme import ChemicalReaction, ReactionSystem
 from .pdf import pdfTT, GammaPDF, BetaPdfTT, LogNormalObservation, GaussianObservation
 from .basis import BSplineBasis, LegendreBasis, ChebyBasis
 from .TimeIntegrator import TTInt</code></pre>
@@ -38,15 +42,11 @@ from .TimeIntegrator import TTInt</code></pre>
 <dl>
 <dt><code class="name"><a title="TTCME.TimeIntegrator" href="TimeIntegrator.html">TTCME.TimeIntegrator</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Tensor train integrator for linear ODEs in the TT format (implements <a href="https://arxiv.org/abs/1403.8085">tAMEn</a>)</p></div>
 </dd>
 <dt><code class="name"><a title="TTCME.basis" href="basis.html">TTCME.basis</a></code></dt>
 <dd>
 <div class="desc"><p>Implements the basic univariate bases.</p></div>
-</dd>
-<dt><code class="name"><a title="TTCME.function" href="function.html">TTCME.function</a></code></dt>
-<dd>
-<div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="TTCME.pdf" href="pdf.html">TTCME.pdf</a></code></dt>
 <dd>
@@ -75,7 +75,6 @@ from .TimeIntegrator import TTInt</code></pre>
 <ul>
 <li><code><a title="TTCME.TimeIntegrator" href="TimeIntegrator.html">TTCME.TimeIntegrator</a></code></li>
 <li><code><a title="TTCME.basis" href="basis.html">TTCME.basis</a></code></li>
-<li><code><a title="TTCME.function" href="function.html">TTCME.function</a></code></li>
 <li><code><a title="TTCME.pdf" href="pdf.html">TTCME.pdf</a></code></li>
 <li><code><a title="TTCME.ttcme" href="ttcme.html">TTCME.ttcme</a></code></li>
 </ul>

@@ -227,14 +227,22 @@ class GaussianObservation:
 class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
         &#34;&#34;&#34;
+        Probability density function approximation using a tensor-product basis:   
+        $$ p(x_1,...,x_d|y_1,...,y_{d&#39;})  = \\sum\\limits_{k_1,...,k_d,n_1,...,n_{d&#39;}} \\mathsf{d}_{k_1...k_dn_1...n_d} b^{(1)}(x_1) \\cdots b^{(d)}(x_d) b&#39;^{(1)}(y_1) \\cdots b&#39;^{(d&#39;)}(y_{d&#39;}),$$
+        where \( \\mathsf{d}\) is the DoF tensor and is represented in the TT format.
         
+        Using the subscript operator, the pdf can be evaluated at given values. Following possible ways of using the subscript operator are possible:
+         
+         - For a conditional PDF, the `Ellipsis` can be used to evaluate the variables we condition on. As an example, for the `pdfTT` instance `p` representing the conditional `p(a,b|c,d)`, the expression `p[...,1,2]` represents the PDF `p(a,b|c=1,d=2)`.
+         - If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.
+
 
         Args:
-            basis (_type_): _description_
-            basis_conditioned (list, optional): _description_. Defaults to [].
-            variable_names (list, optional): _description_. Defaults to [].
-            conditioned_variable_names (list, optional): _description_. Defaults to [].
-            dofs (_type_, optional): _description_. Defaults to None.
+            basis (list[UnivariateBasis]): the univariate bases used to construct the tensor-product basis (\( b^{(k)} \) in the formula above). 
+            basis_conditioned (list[UnivariateBasis], optional): the univariate bases in case a conditional is used (corresponding to the variables right of the conditioned sign). In the equation above are denoted by \( b&#39;^{(k)} \). Defaults to [].
+            variable_names (list[str], optional): the name of variables as a list of strings. Defaults to [].
+            conditioned_variable_names (list[str], optional): the names of the bariables that we condition on. Defaults to [].
+            dofs (torchtt.TT, optional): the dofs in the TT format. If None is provided an uniform PDF is created. Defaults to None.
         &#34;&#34;&#34;
         self.__d = len(basis)
         self.__dc = len(basis_conditioned) 
@@ -252,29 +260,47 @@ class pdfTT():
 
 
     def copy(self):
+        &#34;&#34;&#34;
+        Create a copy of the `pdfTT` instance.
+
+        Returns:
+            pdfTT: the copy.
+        &#34;&#34;&#34;
         return copy.deepcopy(self)
 
     @property
     def basis(self):
         &#34;&#34;&#34;
-
+        list[UnivariateBasis]: the basis used.
         &#34;&#34;&#34;
         return self.__basis.copy()
 
     @property
     def basis_conditioned(self):
+        &#34;&#34;&#34;
+        list[UnivariateBasis]: the basis used for the conditioned variables.
+        &#34;&#34;&#34;
         return self.__basis_cond.copy()
 
     @property
     def variable_names(self):
+        &#34;&#34;&#34;
+        list[str]: the name of the variables.
+        &#34;&#34;&#34;
         return self.__variable_names.copy()
 
     @property
     def conditioned_variable_names(self):
+        &#34;&#34;&#34; 
+        list[str]: the name of the variables we condition on.
+        &#34;&#34;&#34;
         return self.__conditioned_variable_names.copy()
 
     @property
     def dofs(self):
+        &#34;&#34;&#34;
+        torchtt.TT: the dofs tensor in the TT format.
+        &#34;&#34;&#34;
         return self.__tt
 
     @dofs.setter 
@@ -462,6 +488,19 @@ class pdfTT():
         return beval @ self.__tt if beval.is_ttm else tntt.dot(beval, self.__tt)
         
     def __getitem__(self, items):
+        &#34;&#34;&#34;
+        Evaluate the PDF instance. Following possible ways of using the subscript operator are possible:
+         
+         - For a conditional PDF, the `Ellipsis` can be used to evaluate the variables we condition on. As an example, for the `pdfTT` instance `p` representing the conditional `p(a,b|c,d)`, the expression `p[...,1,2]` represents the PDF `p(a,b|c=1,d=2)`.
+         - If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.
+
+        Args:
+            items (tuple): _description_
+
+        Returns:
+            _type_: _description_
+        &#34;&#34;&#34;
+        
 #         if items[0] == Ellipsis:
 #             idx = [slice(None,None,None)]*(self.__d+self.__dc-len(items))
 #         else:
@@ -1003,18 +1042,28 @@ The returned tensor is</p>
 <span>(</span><span>basis, basis_conditioned=[], variable_names=[], conditioned_variable_names=[], dofs=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="args">Args</h2>
+<div class="desc"><p>Probability density function approximation using a tensor-product basis: <br>
+<span><span class="MathJax_Preview"> p(x_1,...,x_d|y_1,...,y_{d'})
+= \sum\limits_{k_1,...,k_d,n_1,...,n_{d'}} \mathsf{d}_{k_1...k_dn_1...n_d} b^{(1)}(x_1) \cdots b^{(d)}(x_d) b'^{(1)}(y_1) \cdots b'^{(d')}(y_{d'}),</span><script type="math/tex; mode=display"> p(x_1,...,x_d|y_1,...,y_{d'})
+= \sum\limits_{k_1,...,k_d,n_1,...,n_{d'}} \mathsf{d}_{k_1...k_dn_1...n_d} b^{(1)}(x_1) \cdots b^{(d)}(x_d) b'^{(1)}(y_1) \cdots b'^{(d')}(y_{d'}),</script></span>
+where <span><span class="MathJax_Preview"> \mathsf{d}</span><script type="math/tex"> \mathsf{d}</script></span> is the DoF tensor and is represented in the TT format.</p>
+<p>Using the subscript operator, the pdf can be evaluated at given values. Following possible ways of using the subscript operator are possible:</p>
+<ul>
+<li>For a conditional PDF, the <code>Ellipsis</code> can be used to evaluate the variables we condition on. As an example, for the <code><a title="TTCME.pdf.pdfTT" href="#TTCME.pdf.pdfTT">pdfTT</a></code> instance <code>p</code> representing the conditional <code>p(a,b|c,d)</code>, the expression <code>p[&hellip;,1,2]</code> represents the PDF <code>p(a,b|c=1,d=2)</code>.</li>
+<li>If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.</li>
+</ul>
+<h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>basis</code></strong> :&ensp;<code>_type_</code></dt>
-<dd><em>description</em></dd>
-<dt><strong><code>basis_conditioned</code></strong> :&ensp;<code>list</code>, optional</dt>
-<dd><em>description</em>. Defaults to [].</dd>
-<dt><strong><code>variable_names</code></strong> :&ensp;<code>list</code>, optional</dt>
-<dd><em>description</em>. Defaults to [].</dd>
-<dt><strong><code>conditioned_variable_names</code></strong> :&ensp;<code>list</code>, optional</dt>
-<dd><em>description</em>. Defaults to [].</dd>
-<dt><strong><code>dofs</code></strong> :&ensp;<code>_type_</code>, optional</dt>
-<dd><em>description</em>. Defaults to None.</dd>
+<dt><strong><code>basis</code></strong> :&ensp;<code>list[UnivariateBasis]</code></dt>
+<dd>the univariate bases used to construct the tensor-product basis (( b^{(k)} ) in the formula above). </dd>
+<dt><strong><code>basis_conditioned</code></strong> :&ensp;<code>list[UnivariateBasis]</code>, optional</dt>
+<dd>the univariate bases in case a conditional is used (corresponding to the variables right of the conditioned sign). In the equation above are denoted by <span><span class="MathJax_Preview"> b'^{(k)} </span><script type="math/tex"> b'^{(k)} </script></span>. Defaults to [].</dd>
+<dt><strong><code>variable_names</code></strong> :&ensp;<code>list[str]</code>, optional</dt>
+<dd>the name of variables as a list of strings. Defaults to [].</dd>
+<dt><strong><code>conditioned_variable_names</code></strong> :&ensp;<code>list[str]</code>, optional</dt>
+<dd>the names of the bariables that we condition on. Defaults to [].</dd>
+<dt><strong><code>dofs</code></strong> :&ensp;<code>torchtt.TT</code>, optional</dt>
+<dd>the dofs in the TT format. If None is provided an uniform PDF is created. Defaults to None.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -1023,14 +1072,22 @@ The returned tensor is</p>
 <pre><code class="python">class pdfTT():
     def __init__(self, basis, basis_conditioned = [], variable_names = [], conditioned_variable_names = [], dofs = None):
         &#34;&#34;&#34;
+        Probability density function approximation using a tensor-product basis:   
+        $$ p(x_1,...,x_d|y_1,...,y_{d&#39;})  = \\sum\\limits_{k_1,...,k_d,n_1,...,n_{d&#39;}} \\mathsf{d}_{k_1...k_dn_1...n_d} b^{(1)}(x_1) \\cdots b^{(d)}(x_d) b&#39;^{(1)}(y_1) \\cdots b&#39;^{(d&#39;)}(y_{d&#39;}),$$
+        where \( \\mathsf{d}\) is the DoF tensor and is represented in the TT format.
         
+        Using the subscript operator, the pdf can be evaluated at given values. Following possible ways of using the subscript operator are possible:
+         
+         - For a conditional PDF, the `Ellipsis` can be used to evaluate the variables we condition on. As an example, for the `pdfTT` instance `p` representing the conditional `p(a,b|c,d)`, the expression `p[...,1,2]` represents the PDF `p(a,b|c=1,d=2)`.
+         - If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.
+
 
         Args:
-            basis (_type_): _description_
-            basis_conditioned (list, optional): _description_. Defaults to [].
-            variable_names (list, optional): _description_. Defaults to [].
-            conditioned_variable_names (list, optional): _description_. Defaults to [].
-            dofs (_type_, optional): _description_. Defaults to None.
+            basis (list[UnivariateBasis]): the univariate bases used to construct the tensor-product basis (\( b^{(k)} \) in the formula above). 
+            basis_conditioned (list[UnivariateBasis], optional): the univariate bases in case a conditional is used (corresponding to the variables right of the conditioned sign). In the equation above are denoted by \( b&#39;^{(k)} \). Defaults to [].
+            variable_names (list[str], optional): the name of variables as a list of strings. Defaults to [].
+            conditioned_variable_names (list[str], optional): the names of the bariables that we condition on. Defaults to [].
+            dofs (torchtt.TT, optional): the dofs in the TT format. If None is provided an uniform PDF is created. Defaults to None.
         &#34;&#34;&#34;
         self.__d = len(basis)
         self.__dc = len(basis_conditioned) 
@@ -1048,29 +1105,47 @@ The returned tensor is</p>
 
 
     def copy(self):
+        &#34;&#34;&#34;
+        Create a copy of the `pdfTT` instance.
+
+        Returns:
+            pdfTT: the copy.
+        &#34;&#34;&#34;
         return copy.deepcopy(self)
 
     @property
     def basis(self):
         &#34;&#34;&#34;
-
+        list[UnivariateBasis]: the basis used.
         &#34;&#34;&#34;
         return self.__basis.copy()
 
     @property
     def basis_conditioned(self):
+        &#34;&#34;&#34;
+        list[UnivariateBasis]: the basis used for the conditioned variables.
+        &#34;&#34;&#34;
         return self.__basis_cond.copy()
 
     @property
     def variable_names(self):
+        &#34;&#34;&#34;
+        list[str]: the name of the variables.
+        &#34;&#34;&#34;
         return self.__variable_names.copy()
 
     @property
     def conditioned_variable_names(self):
+        &#34;&#34;&#34; 
+        list[str]: the name of the variables we condition on.
+        &#34;&#34;&#34;
         return self.__conditioned_variable_names.copy()
 
     @property
     def dofs(self):
+        &#34;&#34;&#34;
+        torchtt.TT: the dofs tensor in the TT format.
+        &#34;&#34;&#34;
         return self.__tt
 
     @dofs.setter 
@@ -1258,6 +1333,19 @@ The returned tensor is</p>
         return beval @ self.__tt if beval.is_ttm else tntt.dot(beval, self.__tt)
         
     def __getitem__(self, items):
+        &#34;&#34;&#34;
+        Evaluate the PDF instance. Following possible ways of using the subscript operator are possible:
+         
+         - For a conditional PDF, the `Ellipsis` can be used to evaluate the variables we condition on. As an example, for the `pdfTT` instance `p` representing the conditional `p(a,b|c,d)`, the expression `p[...,1,2]` represents the PDF `p(a,b|c=1,d=2)`.
+         - If only torcht.tensor of float instances are provided, the result is the tensor that results when the PDF is evaluated on the given tensor-product grid.
+
+        Args:
+            items (tuple): _description_
+
+        Returns:
+            _type_: _description_
+        &#34;&#34;&#34;
+        
 #         if items[0] == Ellipsis:
 #             idx = [slice(None,None,None)]*(self.__d+self.__dc-len(items))
 #         else:
@@ -1409,7 +1497,7 @@ def Z(self):
 </dd>
 <dt id="TTCME.pdf.pdfTT.basis"><code class="name">var <span class="ident">basis</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>list[UnivariateBasis]: the basis used.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1417,56 +1505,68 @@ def Z(self):
 <pre><code class="python">@property
 def basis(self):
     &#34;&#34;&#34;
-
+    list[UnivariateBasis]: the basis used.
     &#34;&#34;&#34;
     return self.__basis.copy()</code></pre>
 </details>
 </dd>
 <dt id="TTCME.pdf.pdfTT.basis_conditioned"><code class="name">var <span class="ident">basis_conditioned</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>list[UnivariateBasis]: the basis used for the conditioned variables.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def basis_conditioned(self):
+    &#34;&#34;&#34;
+    list[UnivariateBasis]: the basis used for the conditioned variables.
+    &#34;&#34;&#34;
     return self.__basis_cond.copy()</code></pre>
 </details>
 </dd>
 <dt id="TTCME.pdf.pdfTT.conditioned_variable_names"><code class="name">var <span class="ident">conditioned_variable_names</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>list[str]: the name of the variables we condition on.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def conditioned_variable_names(self):
+    &#34;&#34;&#34; 
+    list[str]: the name of the variables we condition on.
+    &#34;&#34;&#34;
     return self.__conditioned_variable_names.copy()</code></pre>
 </details>
 </dd>
 <dt id="TTCME.pdf.pdfTT.dofs"><code class="name">var <span class="ident">dofs</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>torchtt.TT: the dofs tensor in the TT format.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def dofs(self):
+    &#34;&#34;&#34;
+    torchtt.TT: the dofs tensor in the TT format.
+    &#34;&#34;&#34;
     return self.__tt</code></pre>
 </details>
 </dd>
 <dt id="TTCME.pdf.pdfTT.variable_names"><code class="name">var <span class="ident">variable_names</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>list[str]: the name of the variables.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def variable_names(self):
+    &#34;&#34;&#34;
+    list[str]: the name of the variables.
+    &#34;&#34;&#34;
     return self.__variable_names.copy()</code></pre>
 </details>
 </dd>
@@ -1477,12 +1577,23 @@ def variable_names(self):
 <span>def <span class="ident">copy</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create a copy of the <code><a title="TTCME.pdf.pdfTT" href="#TTCME.pdf.pdfTT">pdfTT</a></code> instance.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="TTCME.pdf.pdfTT" href="#TTCME.pdf.pdfTT">pdfTT</a></code></dt>
+<dd>the copy.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def copy(self):
+    &#34;&#34;&#34;
+    Create a copy of the `pdfTT` instance.
+
+    Returns:
+        pdfTT: the copy.
+    &#34;&#34;&#34;
     return copy.deepcopy(self)</code></pre>
 </details>
 </dd>
