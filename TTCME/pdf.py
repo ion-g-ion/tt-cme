@@ -185,7 +185,7 @@ class GaussianObservation:
         Adds noise to the given sample accordinf to the pdf.
 
         Args:
-            sample (np.array): m x d array containing the number of eact species at disrete time steps. d is the number of species and m is the number of observations.
+            sample (numpy.array): m x d array containing the number of eact species at disrete time steps. d is the number of species and m is the number of observations.
             sigmas (list[float]): the sigmas of the normal random number generator.
 
         Returns:
