@@ -1,7 +1,7 @@
 # TT-CME
 
 Tensor Train for the Chemical Master Equation. 
-This repository implements the paper ["Tensor-train approximation of the chemical master equation and its application for parameter inference"](https://aip.scitation.org/doi/10.1063/5.0045521) on top of the [torchTT](https://github.com/ion-g-ion/torchTT) package (mirror of [this repository](https://github.com/ion-g-ion/paper-cme-tt))
+This repository implements the paper ["Tensor-train approximation of the chemical master equation and its application for parameter inference"](https://aip.scitation.org/doi/10.1063/5.0045521) on top of the [torchTT](https://github.com/ion-g-ion/torchTT) package ( **upgraded version of [this repository](https://github.com/ion-g-ion/paper-cme-tt)** )
 
 ## Installation
 
