@@ -7,7 +7,7 @@ import numpy as np
 import math
 import scipy.sparse as sps
 from ._ssa import GillespieMultiple, Gillespie, Observations_grid
-
+import functools
 class ChemicalReaction:
 
     def __init__(self, species, formula, constant, decomposable_propensity=[], params = []):
@@ -34,13 +34,13 @@ class ChemicalReaction:
             species (list[str]): the list of species labels.
             formula (str): the formula (must contain labels that are in the species list)
             constant (Union[str, float]): the reaction rate. If string is provided, the rate is a parameter dependent (name has to be provided in ithe params list). 
-            decomposable_propensity (list[Callable], optional): _description_. Defaults to [].
+            decomposable_propensity (list[Callable], optional): the propensity. If an emty lisst is provided, the default combinatorial propenbsities are created instead. Defaults to [].
             params (list[str], optional): the list of parameter names given as strings. Defaults to [].
         """
         self.__species = species.copy()
         self.__formula = formula
         self.__params = params.copy()
-
+        self.__d = len(species)
         
         
         self.__const = constant
@@ -168,11 +168,54 @@ class ChemicalReaction:
 
             Att = Att.round(1e-18)
         else:
-            ## TODO : more comp;icated stuff
-            pass
+            ## TODO : more complicated stuff
+
+            d = len(self.__species)
+            
+            prop_eval_tt = tntt.interpolate.dmrg_cross(lambda i: self.__custom_prop_handle(i,parameter_grid), N+[len(p) for p in parameter_grid], eps=1e-10, nswp = 20) 
+            # print('ready',prop_eval_tt)
+            
+            A1 = []
+            A2 = []
+            for k in range(len(N)):
+                core = tn.zeros((prop_eval_tt.cores[k].shape[0],N[k],N[k],prop_eval_tt.cores[k].shape[-1]))
+                for j in range(N[k]):
+                    core[:,j,j,:] = prop_eval_tt.cores[k][:,j,:] if j+(self.__post[k]-self.__pre[k])>=0 and  j+(self.__post[k]-self.__pre[k])<N[k] else 0.0           
+                A1.append(core)
+               
+
+                core = tn.zeros((prop_eval_tt.cores[k].shape[0],N[k],N[k],prop_eval_tt.cores[k].shape[-1]))
+                for j in range(N[k]):
+                    if j+(self.__post[k]-self.__pre[k])>=0 and  j+(self.__post[k]-self.__pre[k])<N[k]:
+                        core[:,j+(self.__post[k]-self.__pre[k]),j,:] = prop_eval_tt.cores[k][:,j,:]          
+                A2.append(core)
+            
+            A1 = A1 + tntt.diag(prop_eval_tt).cores[len(N):]
+            A2 = A2 + tntt.diag(prop_eval_tt).cores[len(N):]
+            Att = (tntt.TT(A2) - tntt.TT(A1))
+            
+            Att = self.__const * Att
+            
+
+            Att = Att.round(1e-18)
 
         return Att
-    
+
+    def __custom_prop_handle(self, I, params):
+        
+        def tmp(i):
+            p = 1
+            for k,pr in enumerate(self.__propensities):
+                p *= pr(i[k],*[params[j][i[self.__d+j]] for j in range(len(params))])
+            return p
+
+        I = list(I)
+
+        return tn.tensor(list(map(tmp, [list(i) for i in I])))
+
+
+
+
     def construct_generator(self, N, params = None):
         """
         Return the CME generator in `scipy.sparse.csr_matrix` for a fixed parameter passed as an argument.
