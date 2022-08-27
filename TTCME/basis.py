@@ -252,7 +252,7 @@ class DiracDeltaBase(UnivariateBasis):
         return np.array(result)
 
     def __repr__(self):
-        return 'Dirac-deltas basis defined on {'+str(self.__pts[0])+', '+str(self.__pts[-1])+'} and dimension '+str(self.__dim)
+        return 'Dirac-deltas basis defined on {'+str(self.__pts[0])+', ... ,'+str(self.__pts[-1])+'} and dimension '+str(self.__dim)
 
     @property
     def dim(self):
