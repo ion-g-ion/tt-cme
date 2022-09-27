@@ -65,7 +65,7 @@ def SingularPMF(N,I, variable_names = []):
 
     return pdfTT(basis, [], variable_names, [], dofs)
     
-def BetaPdfTT(N : list[int], alphas: list[float], betas: list[float]):
+def BetaPdfTT(N, alphas, betas):
     """
     Compute the PDF for independent beta distributed RVs. 
 

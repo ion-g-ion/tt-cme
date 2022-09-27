@@ -114,9 +114,9 @@ class TTInt():
                     # xs_tt = xs_tt.round(1e-10,5)
                     # tme = datetime.datetime.now()
                     if device != None:
-                        xs_tt = tntt.solvers.amen_solve(B_tt.to(device), f_tt.to(device), x0 = self.xs_tt.to(device), eps = self.__epsilon, verbose = verb, nswp = nswp, kickrank = 8, rmax = 2000, preconditioner=None ).cpu()
+                        xs_tt = tntt.solvers.amen_solve(B_tt.to(device), f_tt.to(device), x0 = self.xs_tt.to(device), eps = self.__epsilon, verbose = verb*0, nswp = nswp, kickrank = 8, rmax = 2000, preconditioner=None ).cpu()
                     else:
-                        xs_tt = tntt.solvers.amen_solve(B_tt, f_tt, x0 = self.xs_tt, eps = self.__epsilon, verbose = verb, nswp = nswp, kickrank = 8, rmax = 2000, preconditioner=None )
+                        xs_tt = tntt.solvers.amen_solve(B_tt, f_tt, x0 = self.xs_tt, eps = self.__epsilon, verbose = verb*0, nswp = nswp, kickrank = 8, rmax = 2000, preconditioner=None )
                     # tme = datetime.datetime.now() - tme
                     # print(tme)
                     
@@ -124,13 +124,16 @@ class TTInt():
                 except:
                     # tme = datetime.datetime.now()
                     if device != None:
-                        xs_tt = tntt.solvers.amen_solve(B_tt.to(device), f_tt.to(device), eps = self.__epsilon, verbose = verb, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ).cpu()
+                        xs_tt = tntt.solvers.amen_solve(B_tt.to(device), f_tt.to(device), eps = self.__epsilon, verbose = verb*0, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ).cpu()
                     else:
-                        xs_tt = tntt.solvers.amen_solve(B_tt, f_tt, eps = self.__epsilon, verbose = verb, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ) 
+                        xs_tt = tntt.solvers.amen_solve(B_tt, f_tt, eps = self.__epsilon, verbose = verb80, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ) 
                     # tme = datetime.datetime.now() - tme
                     # print(tme)
                     
                     self.xs_tt = xs_tt
+                if verb: 
+                    print('The tensor at the subinterval %d has the structure:'%(i+1))
+                    print(xs_tt)
                 # print('SIZE',tt_size(xs_tt)/1e6)
                 # print('PLMMM',tt.sum(xs_tt),xs_tt.r)
                 if basis == None:
