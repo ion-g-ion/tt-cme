@@ -100,7 +100,7 @@ class TTInt():
                 P = tntt.rank1TT([P])
                 I_tt = tntt.eye(self.__A_tt.N).to(dev)
                 B_tt = I_tt ** S - (I_tt ** P) @ (self.__A_tt ** tntt.eye([Nt]).to(dev))
-
+            
             # print(dT,T,intervals)
             returns = []
             for i in range(intervals):
@@ -126,7 +126,7 @@ class TTInt():
                     if device != None:
                         xs_tt = tntt.solvers.amen_solve(B_tt.to(device), f_tt.to(device), eps = self.__epsilon, verbose = verb*0, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ).cpu()
                     else:
-                        xs_tt = tntt.solvers.amen_solve(B_tt, f_tt, eps = self.__epsilon, verbose = verb80, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ) 
+                        xs_tt = tntt.solvers.amen_solve(B_tt, f_tt, eps = self.__epsilon, verbose = verb*0, nswp = nswp, kickrank = 8, rmax=2000, preconditioner=None ) 
                     # tme = datetime.datetime.now() - tme
                     # print(tme)
                     
