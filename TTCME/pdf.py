@@ -415,6 +415,7 @@ class pdfTT():
                 Iop = tntt.rank1TT([ tn.tensor(Bs[k]*(Pts[k] if k==i else 1)*(Pts[k] if k==j else 1)) for k in range(self.__d)])
                 
                 C[i,j] = tntt.dot( Iop.t() @ self.__tt , w_tt ) - E[i]*E[j]
+                C[j,i] = C[i,j]
             
         return C
     

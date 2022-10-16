@@ -85,7 +85,9 @@ class LegendreBasis(UnivariateBasis):
     def mass(self):
         return self.__mass
 
-
+    @property
+    def domain(self):
+        return self.__domain
     
     
     def interpolate(self,fun):
@@ -155,6 +157,10 @@ class ChebyBasis(UnivariateBasis):
     @property
     def mass(self):
         return self.__mass
+    
+    @property
+    def domain(self):
+        return self.__domain
     
     def plot(self):
         x = np.linspace(self.domain[0],self.domain[1],self.dim*32)
@@ -233,6 +239,10 @@ class LagrangeBasis(UnivariateBasis):
     @property
     def interpolation_pts(self):
         return self.__pts, np.eye(self.__dim)
+
+    @property
+    def domain(self):
+        return self.__domain
 
     def integration_points(self,mult = 2):
         return points_weights(self.domain[0], self.domain[1], self.deg*mult)
@@ -375,9 +385,13 @@ class BSplineBasis(UnivariateBasis):
     @property
     def interpolation_pts(self):
         xg = self.__greville().flatten()
-        yg = self(xg)
+        yg = self(xg).T
         return xg, yg
-    
+        
+    @property
+    def domain(self):
+        return self.__domain
+
     def __repr__(self):
         return 'B-spline basis defined on ['+str(self.__domain[0])+', '+str(self.__domain[1])+'] and dimension '+str(self.__dim)
 
